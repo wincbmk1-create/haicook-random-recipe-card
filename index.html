@@ -1,0 +1,1086 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HAiCook | Random Cooking Inspiration Card</title>
+
+<!-- Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<!-- Font Awesome (icons only, no framework) -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+
+<style>
+  :root{
+    --cream:#FBF3E6;
+    --cream-soft:#FDF8F0;
+    --sage:#8AA17E;
+    --sage-dark:#6F8A63;
+    --coffee:#7A5C43;
+    --coffee-dark:#5A4230;
+    --text-dark:#4A3B2F;
+    --text-light:#8A7C6E;
+    --white:#FFFFFF;
+    --shadow:rgba(74,59,47,0.15);
+    --accent:#E8A566;
+  }
+
+  *{ box-sizing:border-box; margin:0; padding:0; }
+
+  html,body{
+    min-height:100%;
+    font-family:'Quicksand', sans-serif;
+    color:var(--text-dark);
+    background-image:
+      url("data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='520' height='520'%3E%3Ctext x='40' y='80' font-size='28' opacity='0.22'%3E%F0%9F%8D%B3%3C/text%3E%3Ctext x='340' y='150' font-size='24' opacity='0.18'%3E%F0%9F%A5%95%3C/text%3E%3Ctext x='150' y='300' font-size='26' opacity='0.2'%3E%F0%9F%8C%BF%3C/text%3E%3Ctext x='420' y='400' font-size='24' opacity='0.18'%3E%F0%9F%8D%85%3C/text%3E%3Ctext x='70' y='450' font-size='26' opacity='0.2'%3E%F0%9F%8D%9A%3C/text%3E%3Ctext x='300' y='60' font-size='22' opacity='0.16'%3E%F0%9F%8D%9C%3C/text%3E%3C/svg%3E"),
+      linear-gradient(160deg, #FBF3E6 0%, #F6EFE1 40%, #EAF1E3 100%);
+    background-repeat:repeat, no-repeat;
+    background-size:520px 520px, cover;
+    background-position:0 0, center;
+    background-attachment:fixed, fixed;
+    overflow-x:hidden;
+  }
+
+  h1,h2,h3{ font-family:'Poppins', sans-serif; }
+
+  .app-container{
+    max-width:720px;
+    margin:0 auto;
+    padding:32px 20px 60px;
+    position:relative;
+  }
+
+  /* Header */
+  header{
+    text-align:center;
+    margin-bottom:28px;
+    position:relative;
+    z-index:1;
+  }
+  .brand{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    background:var(--white);
+    padding:6px 16px;
+    border-radius:999px;
+    box-shadow:0 4px 14px var(--shadow);
+    font-weight:700;
+    color:var(--sage-dark);
+    font-size:0.85rem;
+    letter-spacing:0.5px;
+    margin-bottom:18px;
+  }
+  .brand i{ color:var(--accent); }
+
+  header h1{
+    font-size:2rem;
+    font-weight:800;
+    color:var(--coffee-dark);
+    line-height:1.3;
+    margin-bottom:10px;
+  }
+  header .subtitle{
+    font-size:1.05rem;
+    color:var(--coffee-dark);
+    font-weight:700;
+    max-width:480px;
+    margin:0 auto;
+  }
+
+  /* Selector Panel */
+  .selector-panel{
+    background:var(--white);
+    border-radius:24px;
+    padding:26px 22px;
+    box-shadow:0 10px 30px var(--shadow);
+    margin-bottom:34px;
+    position:relative;
+    z-index:1;
+  }
+  .selector-panel h2{
+    font-size:1.15rem;
+    color:var(--coffee-dark);
+    margin-bottom:4px;
+  }
+  .selector-panel .hint-text{
+    font-size:0.9rem;
+    color:var(--text-light);
+    margin-bottom:16px;
+  }
+
+  .base-options{
+    display:grid;
+    grid-template-columns:repeat(4, 1fr);
+    gap:10px;
+    margin-bottom:22px;
+  }
+  .base-chip{
+    width:100%;
+    height:48px;
+    background:var(--cream-soft);
+    border:2px solid transparent;
+    color:var(--coffee-dark);
+    padding:10px 8px;
+    border-radius:16px;
+    font-family:'Quicksand', sans-serif;
+    font-weight:700;
+    font-size:0.92rem;
+    cursor:pointer;
+    text-align:center;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    transition:all 0.2s ease;
+    user-select:none;
+  }
+  .base-chip:hover{
+    background:#F3E9D8;
+    transform:translateY(-2px);
+  }
+  .base-chip.active{
+    background:var(--sage);
+    color:#fff;
+    border-color:var(--sage-dark);
+    box-shadow:0 6px 14px rgba(138,161,126,0.45);
+    transform:translateY(-2px) scale(1.03);
+  }
+
+  .spin-btn{
+    display:block;
+    width:100%;
+    padding:16px 20px;
+    border:none;
+    border-radius:18px;
+    background:linear-gradient(135deg, var(--coffee) 0%, var(--coffee-dark) 100%);
+    color:#fff;
+    font-family:'Poppins', sans-serif;
+    font-weight:700;
+    font-size:1.05rem;
+    letter-spacing:0.3px;
+    cursor:pointer;
+    box-shadow:0 10px 20px rgba(122,92,67,0.35);
+    transition:transform 0.15s ease, box-shadow 0.15s ease, opacity 0.2s ease;
+  }
+  .spin-btn:disabled{
+    background:#D8CFC2;
+    color:#9C9184;
+    box-shadow:none;
+    cursor:not-allowed;
+  }
+  .spin-btn:not(:disabled):hover{
+    transform:translateY(-2px);
+    box-shadow:0 14px 24px rgba(122,92,67,0.4);
+  }
+  .spin-btn:not(:disabled):active{
+    transform:scale(0.97);
+  }
+  .spin-btn i{ margin-right:8px; }
+
+  .or-divider{
+    display:flex;
+    align-items:center;
+    text-align:center;
+    color:var(--text-light);
+    font-size:0.82rem;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:1px;
+    margin:16px 0;
+  }
+  .or-divider::before,
+  .or-divider::after{
+    content:'';
+    flex:1;
+    height:1px;
+    background:rgba(122,92,67,0.18);
+  }
+  .or-divider span{ padding:0 12px; }
+
+  .surprise-btn{
+    display:block;
+    width:100%;
+    padding:15px 20px;
+    border:2px solid var(--accent);
+    border-radius:18px;
+    background:#FFF7EC;
+    color:var(--coffee-dark);
+    font-family:'Poppins', sans-serif;
+    font-weight:700;
+    font-size:1rem;
+    letter-spacing:0.3px;
+    cursor:pointer;
+    transition:transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+  }
+  .surprise-btn i{ margin-right:8px; color:var(--accent); }
+  .surprise-btn:hover{
+    background:var(--accent);
+    color:#fff;
+    transform:translateY(-2px);
+    box-shadow:0 10px 20px rgba(232,165,102,0.4);
+  }
+  .surprise-btn:hover i{ color:#fff; }
+  .surprise-btn:active{ transform:scale(0.97); }
+
+  /* Card section */
+  .card-section{
+    display:flex;
+    justify-content:center;
+    margin-bottom:10px;
+    min-height:120px;
+    position:relative;
+    z-index:1;
+  }
+
+  /* Stacked placeholder cards (shown before first spin) */
+  .card-stack{
+    position:relative;
+    width:100%;
+    max-width:420px;
+    height:360px;
+    margin:0 auto;
+    transition:opacity 0.4s cubic-bezier(.4,0,.2,1), transform 0.4s cubic-bezier(.4,0,.2,1);
+  }
+  .card-stack.stack-fade-out{
+    opacity:0;
+    transform:scale(0.88) translateY(6px);
+    pointer-events:none;
+  }
+  .stack-card{
+    position:absolute;
+    inset:0;
+    border-radius:26px;
+    background:var(--white);
+    box-shadow:0 14px 30px var(--shadow);
+  }
+  .stack-card-3{
+    transform:rotate(-9deg) translateY(14px);
+    opacity:0.5;
+    z-index:1;
+    border:2px dashed rgba(122,92,67,0.18);
+  }
+  .stack-card-2{
+    transform:rotate(7deg) translateY(8px);
+    opacity:0.72;
+    z-index:2;
+    border:2px dashed rgba(122,92,67,0.18);
+  }
+  .stack-card-1{
+    transform:rotate(-1.5deg);
+    z-index:3;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    background:linear-gradient(160deg, var(--cream-soft) 0%, var(--white) 100%);
+    border:2px solid rgba(122,92,67,0.1);
+  }
+  .stack-question{
+    font-family:'Poppins', sans-serif;
+    font-size:5.5rem;
+    font-weight:800;
+    color:var(--sage);
+    line-height:1;
+    animation:pulseQuestion 2.4s ease-in-out infinite;
+  }
+  .stack-caption{
+    font-size:0.95rem;
+    font-weight:700;
+    color:var(--text-light);
+    text-align:center;
+    padding:0 30px;
+  }
+  @keyframes pulseQuestion{
+    0%,100%{ transform:scale(1); opacity:0.6; }
+    50%{ transform:scale(1.1); opacity:0.9; }
+  }
+
+  .recipe-card{
+    background:var(--white);
+    border-radius:26px;
+    overflow:hidden;
+    width:100%;
+    max-width:680px;
+    box-shadow:0 18px 40px var(--shadow);
+    transform-origin:center;
+  }
+
+  .card-image-wrap{
+    position:relative;
+    width:100%;
+    aspect-ratio:1 / 1;
+    overflow:hidden;
+    background:var(--cream-soft);
+  }
+  .card-image-wrap img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+    transition:transform 0.4s ease;
+  }
+  .recipe-card:hover .card-image-wrap img{
+    transform:scale(1.05);
+  }
+  .badge{
+    position:absolute;
+    top:14px;
+    right:14px;
+    background:rgba(255,255,255,0.92);
+    color:var(--sage-dark);
+    font-weight:700;
+    font-size:0.78rem;
+    padding:6px 12px;
+    border-radius:999px;
+    box-shadow:0 4px 10px rgba(0,0,0,0.15);
+    text-transform:uppercase;
+    letter-spacing:0.5px;
+  }
+
+  .card-body{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    position:relative;
+  }
+  .card-body::before{
+    content:'';
+    position:absolute;
+    top:0;
+    bottom:0;
+    left:50%;
+    width:1px;
+    margin-left:-0.5px;
+    background:rgba(122,92,67,0.18);
+    pointer-events:none;
+    z-index:1;
+  }
+  .card-page-left{
+    padding:22px 18px 26px 24px;
+  }
+  .card-page-right{
+    padding:22px 24px 26px 18px;
+    background:var(--cream-soft);
+  }
+  .card-title-row{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:12px;
+    margin-bottom:14px;
+  }
+  .card-body h3{
+    font-size:1.4rem;
+    color:var(--coffee-dark);
+    line-height:1.3;
+  }
+  .difficulty-tag{
+    flex-shrink:0;
+    font-size:0.8rem;
+    font-weight:800;
+    padding:7px 14px;
+    border-radius:999px;
+    white-space:nowrap;
+    text-transform:uppercase;
+    letter-spacing:0.4px;
+    margin-top:2px;
+  }
+  .difficulty-tag.easy{ background:#E4F3DE; color:var(--sage-dark); }
+  .difficulty-tag.medium{ background:#FDEBD3; color:#B9711F; }
+  .difficulty-tag.hard{ background:#FBE0DE; color:#C0392B; }
+
+  .card-body .description{
+    font-size:1.08rem;
+    font-weight:600;
+    color:var(--text-dark);
+    margin-bottom:20px;
+    line-height:1.6;
+  }
+
+  .section-block{
+    margin-bottom:18px;
+  }
+  .section-block:last-child{ margin-bottom:0; }
+  .section-heading{
+    font-family:'Poppins', sans-serif;
+    font-size:1.02rem;
+    font-weight:700;
+    color:var(--coffee-dark);
+    margin-bottom:10px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .section-heading i{ color:var(--sage); }
+
+  .ingredients-list{
+    list-style:none;
+    display:flex;
+    flex-direction:column;
+    gap:9px;
+    padding:14px 16px;
+    background:var(--cream-soft);
+    border-radius:14px;
+  }
+  .ingredients-list li{
+    font-size:1rem;
+    font-weight:600;
+    color:var(--text-dark);
+    line-height:1.5;
+    padding-left:20px;
+    position:relative;
+  }
+  .ingredients-list li::before{
+    content:'\2022';
+    position:absolute;
+    left:4px;
+    color:var(--sage-dark);
+    font-weight:800;
+  }
+
+  .why-love-block{
+    margin-top:18px;
+  }
+  .why-love{
+    background:var(--white);
+    border-left:4px solid var(--sage);
+    box-shadow:0 4px 12px rgba(74,59,47,0.08);
+    padding:14px 16px;
+    border-radius:10px;
+    font-size:1rem;
+    font-weight:600;
+    line-height:1.6;
+    color:var(--text-dark);
+    position:relative;
+  }
+  .why-love i{
+    color:var(--sage-dark);
+    margin-right:6px;
+  }
+
+  /* Book-style right page for cooking steps */
+  .card-page-right{
+    position:relative;
+    display:flex;
+    flex-direction:column;
+  }
+  .book-heading{
+    font-family:'Poppins', sans-serif;
+    font-size:1.1rem;
+    font-weight:800;
+    color:var(--coffee-dark);
+    margin-bottom:14px;
+    display:flex;
+    align-items:center;
+    gap:9px;
+    padding-bottom:10px;
+    border-bottom:2px dashed rgba(122,92,67,0.2);
+  }
+  .book-heading i{ color:var(--sage); font-size:1.15rem; }
+
+  .steps-list{
+    list-style:none;
+    counter-reset:step-counter;
+    display:flex;
+    flex-direction:column;
+    gap:16px;
+    flex:1;
+  }
+  .steps-list li{
+    font-size:1rem;
+    font-weight:600;
+    color:var(--text-dark);
+    line-height:1.55;
+    padding-left:34px;
+    position:relative;
+    counter-increment:step-counter;
+  }
+  .steps-list li::before{
+    content:counter(step-counter);
+    position:absolute;
+    left:0;
+    top:0;
+    width:24px;
+    height:24px;
+    background:var(--sage);
+    color:#fff;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:0.8rem;
+    font-weight:800;
+    box-shadow:0 2px 6px rgba(111,138,99,0.4);
+  }
+
+  /* Card animations */
+  @keyframes cardFadeIn{
+    0%{ opacity:0; transform:translateY(18px) scale(0.96); }
+    60%{ opacity:1; transform:translateY(-4px) scale(1.01); }
+    100%{ opacity:1; transform:translateY(0) scale(1); }
+  }
+  .card-appear{
+    animation:cardFadeIn 0.6s cubic-bezier(.34,1.56,.64,1);
+  }
+  .card-flip-out{
+    transition:transform 0.28s ease, opacity 0.28s ease;
+    transform:rotateY(90deg) scale(0.85);
+    opacity:0;
+  }
+  @keyframes cardFlipIn{
+    0%{ transform:rotateY(-90deg) scale(0.85); opacity:0; }
+    60%{ transform:rotateY(12deg) scale(1.03); opacity:1; }
+    100%{ transform:rotateY(0deg) scale(1); opacity:1; }
+  }
+  .card-flip-in{
+    animation:cardFlipIn 0.55s cubic-bezier(.34,1.56,.64,1);
+  }
+
+  /* CTA */
+  .cta-section{
+    text-align:center;
+    margin-top:64px;
+    padding:26px 20px;
+    background:var(--white);
+    border-radius:22px;
+    box-shadow:0 10px 24px var(--shadow);
+    animation:cardFadeIn 0.6s ease;
+    position:relative;
+    z-index:1;
+  }
+  .cta-section p{
+    font-size:1rem;
+    font-weight:600;
+    color:var(--coffee-dark);
+    max-width:420px;
+    margin:0 auto 20px;
+    line-height:1.5;
+  }
+  .store-buttons{
+    display:flex;
+    gap:14px;
+    justify-content:center;
+    flex-wrap:wrap;
+    align-items:center;
+  }
+  .store-btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:180px;
+    height:56px;
+    background:#000;
+    text-decoration:none;
+    border-radius:12px;
+    overflow:hidden;
+    transition:transform 0.15s ease, box-shadow 0.15s ease;
+    box-shadow:0 8px 18px rgba(0,0,0,0.18);
+    line-height:0;
+  }
+  .store-btn img{
+    max-width:100%;
+    max-height:100%;
+    width:auto;
+    height:auto;
+    object-fit:contain;
+    display:block;
+  }
+  .store-btn:hover{
+    transform:translateY(-3px);
+    box-shadow:0 12px 22px rgba(0,0,0,0.22);
+  }
+  .store-btn:active{ transform:scale(0.96); }
+
+  footer.note{
+    text-align:center;
+    margin-top:26px;
+    font-size:0.78rem;
+    color:var(--text-light);
+  }
+
+  /* Tablet & below: stack the book pages into a single column */
+  @media (max-width:768px){
+    .recipe-card{ max-width:420px; }
+    .card-body{ grid-template-columns:1fr; }
+    .card-body::before{ display:none; }
+    .card-page-left{ padding:22px 22px 8px; }
+    .card-page-right{
+      padding:20px 22px 26px;
+      background:var(--cream-soft);
+      border-top:2px dashed rgba(122,92,67,0.2);
+      margin-top:6px;
+    }
+  }
+
+  /* Responsive */
+  @media (max-width:480px){
+    header h1{ font-size:1.5rem; }
+    header .subtitle{ font-size:0.95rem; }
+    .selector-panel{ padding:20px 16px; border-radius:20px; }
+    .base-options{ grid-template-columns:repeat(2, 1fr); }
+    .base-chip{ font-size:0.85rem; padding:9px 6px; height:44px; }
+    .card-stack{ height:290px; }
+    .stack-question{ font-size:4rem; }
+    .card-page-left{ padding:18px 18px 8px; }
+    .card-page-right{ padding:16px 18px 22px; }
+    .card-body h3{ font-size:1.2rem; }
+    .difficulty-tag{ font-size:0.72rem; padding:6px 11px; }
+    .card-body .description{ font-size:1rem; }
+    .section-heading{ font-size:0.96rem; }
+    .book-heading{ font-size:1rem; }
+    .ingredients-list li{ font-size:0.95rem; }
+    .why-love{ font-size:0.95rem; }
+    .steps-list li{ font-size:0.95rem; padding-left:30px; }
+    .steps-list li::before{ width:22px; height:22px; font-size:0.75rem; }
+    .store-buttons{ flex-direction:column; align-items:center; }
+    .store-btn{ width:160px; height:50px; }
+    body{ background-size:320px 320px, cover; }
+  }
+</style>
+</head>
+<body>
+
+<div class="app-container">
+
+  <header>
+    <div class="brand"><i class="fa-solid fa-utensils"></i> HAiCook</div>
+    <h1>Not sure what to cook today?</h1>
+    <p class="subtitle">Get a random recipe idea and get inspired in seconds.</p>
+  </header>
+
+  <!-- Step 1: Ask user preference before spinning -->
+  <section class="selector-panel" id="selectorPanel">
+    <h2>What are you craving today?</h2>
+    <p class="hint-text">Pick one, then spin to get a matching recipe idea 👇</p>
+
+    <div class="base-options" id="baseOptions">
+      <button type="button" class="base-chip" data-base="Rice">🍚 Rice</button>
+      <button type="button" class="base-chip" data-base="Pasta">🍝 Pasta</button>
+      <button type="button" class="base-chip" data-base="Bread">🍞 Bread</button>
+      <button type="button" class="base-chip" data-base="Noodles">🍜 Noodles</button>
+      <button type="button" class="base-chip" data-base="Potato">🥔 Potato</button>
+      <button type="button" class="base-chip" data-base="Soup">🍲 Soup</button>
+      <button type="button" class="base-chip" data-base="Salad">🥗 Salad / Bowl</button>
+      <button type="button" class="base-chip" data-base="Dessert">🍰 Dessert</button>
+    </div>
+
+    <button type="button" class="spin-btn" id="spinBtn" disabled>
+      <i class="fa-solid fa-dice"></i>Spin for a Recipe Idea
+    </button>
+
+    <div class="or-divider"><span>or</span></div>
+
+    <button type="button" class="surprise-btn" id="surpriseBtn">
+      <i class="fa-solid fa-shuffle"></i>Surprise Me — Spin Now
+    </button>
+  </section>
+
+  <!-- Step 2: Result card -->
+  <section class="card-section">
+    <div class="card-stack" id="cardStack">
+      <div class="stack-card stack-card-3"></div>
+      <div class="stack-card stack-card-2"></div>
+      <div class="stack-card stack-card-1">
+        <span class="stack-question">?</span>
+        <p class="stack-caption">Choose a main base above, then hit spin to reveal your recipe idea!</p>
+      </div>
+    </div>
+
+    <article class="recipe-card" id="recipeCard" hidden>
+      <div class="card-image-wrap">
+        <img id="cardImage" src="" alt="Recipe dish photo">
+        <span class="badge" id="cardBase">Rice</span>
+      </div>
+      <div class="card-body">
+        <div class="card-page-left">
+          <div class="card-title-row">
+            <h3 id="cardName">Dish Name</h3>
+            <span class="difficulty-tag" id="cardDifficulty">Easy</span>
+          </div>
+          <p class="description" id="cardDescription">Short description goes here.</p>
+
+          <div class="section-block">
+            <p class="section-heading"><i class="fa-solid fa-basket-shopping"></i>Ingredients</p>
+            <ul class="ingredients-list" id="cardIngredientsList"></ul>
+          </div>
+        </div>
+
+        <div class="card-page-right">
+          <p class="book-heading"><i class="fa-solid fa-book-open"></i>Cooking Steps</p>
+          <ol class="steps-list" id="cardStepsList"></ol>
+
+          <div class="section-block why-love-block">
+            <p class="why-love"><i class="fa-solid fa-heart"></i><strong>Why You'll Love It:</strong> <span id="cardWhy"></span></p>
+          </div>
+        </div>
+      </div>
+    </article>
+  </section>
+
+  <!-- CTA (always visible) -->
+  <section class="cta-section" id="ctaSection">
+    <p>Want more recipe ideas? Download HAiCook and generate recipes with your ingredients.</p>
+    <div class="store-buttons">
+      <!-- 🔗 REPLACE '#' BELOW with your real App Store link -->
+      <a href="#" class="store-btn apple" id="appStoreLink" target="_blank" rel="noopener" aria-label="Download on the App Store">
+        <img src="images/app-store-badge.svg" alt="Download on the App Store">
+      </a>
+      <!-- 🔗 REPLACE '#' BELOW with your real Google Play link -->
+      <a href="#" class="store-btn google" id="googlePlayLink" target="_blank" rel="noopener" aria-label="Get it on Google Play">
+        <img src="images/google-play-badge.png" alt="Get it on Google Play">
+      </a>
+    </div>
+  </section>
+
+  <footer class="note">Dish photos are for illustration purposes only.</footer>
+</div>
+
+<script>
+/* =========================================================
+   HAiCook — Random Cooking Inspiration Card
+   Replace store links marked with 🔗 above with real URLs.
+   ========================================================= */
+
+// ---------- Recipe Data (64 cards) ----------
+const RECIPES = [
+  // ---------------- RICE ----------------
+  { name:"Chicken Fried Rice", cuisine:"Chinese-American", ingredients:"Chicken, rice, egg, soy sauce, peas", mood:"Quick & Comforting", difficulty:"Easy", why:"One-pan magic that turns last night's leftover rice into a brand-new meal.", mainBase:"Rice", image:"https://loremflickr.com/600/400/friedrice,food", description:"This weeknight favorite starts with day-old rice, which fries up firmer and less sticky than fresh rice. Tender bites of chicken, scrambled egg, and sweet peas are tossed together in a hot wok with a splash of savory soy sauce, giving every spoonful a satisfying mix of textures. It's a fantastic way to use up leftovers while still feeling like a proper home-cooked meal, and it comes together in under 20 minutes flat.",
+    ingredientsList:["2 cups cooked jasmine rice (day-old)","1 boneless chicken breast, diced","2 large eggs","3 tbsp soy sauce","1/2 cup frozen peas and carrots","2 tbsp vegetable oil","2 cloves garlic, minced","2 green onions, sliced"],
+    steps:["Heat 1 tbsp oil in a large wok or skillet over high heat.","Add diced chicken and cook until golden and cooked through, about 5 minutes; remove and set aside.","Push rice to one side, crack in eggs on the other side, and scramble until just set.","Add garlic, peas and carrots, and cooked chicken; stir-fry everything together for 2 minutes.","Pour in soy sauce, toss well to coat, and garnish with sliced green onions before serving."] },
+  { name:"Spanish Paella", cuisine:"Spanish", ingredients:"Rice, saffron, shrimp, chicken, peppers", mood:"Festive & Colorful", difficulty:"Medium", why:"A show-stopping one-pan dish perfect for weekend gatherings.", mainBase:"Rice", image:"https://loremflickr.com/600/400/paella,food", description:"Paella is Spain's beloved celebration dish, built around short-grain rice slowly simmered in a saffron-infused broth until it turns a deep golden hue. Juicy shrimp, tender chicken, and sweet bell peppers are layered on top, while the rice at the bottom develops a coveted crispy crust called socarrat. Traditionally cooked in a wide shallow pan and served straight from it, paella turns any weekend dinner into a shared, festive occasion.",
+    ingredientsList:["2 cups short-grain rice (bomba or arborio)","1/2 tsp saffron threads","4 cups chicken or seafood stock","8 large shrimp, peeled","1 chicken thigh, cut into pieces","1 red bell pepper, sliced","1 onion, diced","3 cloves garlic, minced","2 tbsp olive oil"],
+    steps:["Heat olive oil in a wide paella pan and brown the chicken pieces on both sides; set aside.","Sauté onion, garlic, and bell pepper in the same pan until softened.","Stir in rice, coating it in the oil, then add saffron-infused stock.","Nestle the browned chicken back into the pan and simmer without stirring for 15-18 minutes.","Add shrimp on top for the last 5 minutes of cooking, and let a crispy socarrat form on the bottom before serving."] },
+  { name:"Japanese Onigiri", cuisine:"Japanese", ingredients:"Rice, nori, salmon, salt", mood:"Cozy & Simple", difficulty:"Easy", why:"Portable rice balls perfect for lunchboxes and busy mornings.", mainBase:"Rice", image:"https://loremflickr.com/600/400/onigiri,food", description:"Onigiri are hand-shaped rice balls that have been a staple of Japanese home cooking and bento boxes for generations. Warm, lightly salted rice is pressed around a savory filling of flaked salmon, then wrapped in a crisp sheet of nori seaweed for a satisfying textural contrast. They travel beautifully, taste great at room temperature, and make an easy grab-and-go breakfast or lunch for busy mornings.",
+    ingredientsList:["2 cups cooked short-grain Japanese rice, warm","1 sheet nori, cut into strips","1/2 cup cooked salmon, flaked","1/2 tsp salt","water for wetting hands"],
+    steps:["Wet your hands with water and rub a pinch of salt into your palms.","Scoop about 1/2 cup of warm rice into your palm and flatten slightly.","Press a spoonful of flaked salmon into the center and fold the rice around it.","Shape into a triangle or ball by pressing firmly with both hands.","Wrap a strip of nori around the base before serving."] },
+  { name:"Mexican Rice Bowl", cuisine:"Mexican", ingredients:"Rice, black beans, corn, avocado, lime", mood:"Fresh & Zesty", difficulty:"Easy", why:"A vibrant bowl loaded with color and bold Tex-Mex flavor.", mainBase:"Rice", image:"https://loremflickr.com/600/400/ricebowl,mexicanfood", description:"This build-your-own style bowl layers fluffy rice with hearty black beans, sweet charred corn, and creamy avocado, all brightened up with a generous squeeze of fresh lime juice. It's naturally vegetarian, endlessly customizable with your favorite toppings like salsa or cheese, and comes together mostly from pantry staples. The combination of textures and bold Tex-Mex flavors makes it a go-to for quick, colorful weeknight dinners.",
+    ingredientsList:["2 cups cooked white rice","1 can black beans, drained and rinsed","1 cup corn kernels","1 avocado, sliced","1 lime, juiced","1/2 cup salsa","1/4 cup shredded cheese","fresh cilantro"],
+    steps:["Warm the black beans and corn in a small pan over medium heat.","Divide the cooked rice between bowls as the base.","Top with warm beans, corn, and sliced avocado.","Spoon salsa over the top and sprinkle with shredded cheese.","Finish with a squeeze of fresh lime juice and chopped cilantro."] },
+  { name:"Chicken Biryani", cuisine:"Indian", ingredients:"Basmati rice, chicken, yogurt, spices", mood:"Warm & Aromatic", difficulty:"Medium", why:"Fragrant layers of spiced rice and tender chicken in every bite.", mainBase:"Rice", image:"https://loremflickr.com/600/400/biryani,food", description:"Biryani is a fragrant, celebratory rice dish beloved across South Asia, made by layering long-grain basmati rice with chicken marinated in yogurt and a warm blend of spices like cardamom, cinnamon, and cloves. The whole pot is slow-cooked so the rice absorbs all those aromas while staying light and fluffy. Each spoonful delivers a different balance of spice, tenderness, and fragrance, making it a dish that feels special enough for guests yet comforting enough for a family dinner.",
+    ingredientsList:["2 cups basmati rice","500g chicken thighs","1 cup plain yogurt","2 onions, thinly sliced","2 tbsp biryani spice mix","1/2 tsp saffron, soaked in warm milk","3 tbsp ghee","fresh mint and cilantro"],
+    steps:["Marinate chicken in yogurt and biryani spices for at least 1 hour.","Fry sliced onions in ghee until deep golden brown; set half aside for garnish.","Cook the marinated chicken with the remaining fried onions until nearly done.","Parboil the basmati rice separately until 70% cooked, then drain.","Layer the rice over the chicken, drizzle with saffron milk, cover tightly, and steam on low heat for 20 minutes before fluffing and serving."] },
+  { name:"Mushroom Risotto", cuisine:"Italian", ingredients:"Arborio rice, mushrooms, parmesan, butter", mood:"Creamy & Relaxing", difficulty:"Medium", why:"Slow-stirred comfort food that feels like a warm hug.", mainBase:"Rice", image:"https://loremflickr.com/600/400/risotto,food", description:"Risotto is a labor of love — starchy Arborio rice is toasted, then slowly bathed in warm broth one ladle at a time while you stir, coaxing out its natural creaminess without any cream at all. Earthy sautéed mushrooms add a deep, savory note, while a generous finish of butter and parmesan makes the whole dish silky and rich. The gentle, repetitive stirring process is almost meditative, making it as relaxing to cook as it is comforting to eat.",
+    ingredientsList:["1.5 cups arborio rice","300g mixed mushrooms, sliced","4 cups warm vegetable broth","1/2 cup dry white wine","1 onion, finely diced","1/2 cup grated parmesan","3 tbsp butter"],
+    steps:["Sauté mushrooms in a little butter until golden; set aside.","In the same pan, cook onion until translucent, then add rice and toast for 1-2 minutes.","Pour in the wine and stir until absorbed.","Add warm broth one ladle at a time, stirring often, until each addition is absorbed before adding more.","Once rice is creamy and tender, stir in mushrooms, butter, and parmesan before serving."] },
+  { name:"Korean Bibimbap", cuisine:"Korean", ingredients:"Rice, vegetables, egg, gochujang", mood:"Energizing & Balanced", difficulty:"Easy", why:"A colorful mix-it-yourself bowl packed with veggies and flavor.", mainBase:"Rice", image:"https://loremflickr.com/600/400/bibimbap,food", description:"Bibimbap literally means 'mixed rice,' and it lives up to its name with a beautiful arrangement of sautéed vegetables, a fried egg, and warm rice all topped with a dollop of spicy-sweet gochujang sauce. Part of the fun is mixing everything together yourself right before eating, so every bite gets a slightly different balance of color, crunch, and heat. It's a wonderfully balanced meal that feels both nourishing and exciting.",
+    ingredientsList:["2 cups cooked white rice","1 carrot, julienned","1 cup spinach, blanched","1 cup bean sprouts","1 zucchini, julienned and sautéed","1 egg, fried","2 tbsp gochujang","1 tsp sesame oil"],
+    steps:["Prepare each vegetable separately, seasoning lightly with sesame oil and salt.","Fry an egg sunny-side up, keeping the yolk runny.","Add warm rice to a bowl and arrange the vegetables around the edge.","Top with the fried egg and a generous dollop of gochujang in the center.","Mix everything together thoroughly just before eating."] },
+  { name:"Caribbean Coconut Rice", cuisine:"Caribbean", ingredients:"Rice, coconut milk, beans, thyme", mood:"Tropical & Sunny", difficulty:"Easy", why:"Creamy coconut rice that brings island vibes to your dinner table.", mainBase:"Rice", image:"https://loremflickr.com/600/400/coconutrice,food", description:"This Caribbean staple swaps out plain water for rich coconut milk, giving the rice a subtly sweet, creamy backdrop that pairs beautifully with hearty beans and fragrant fresh thyme. It's traditionally served alongside grilled meats or fish, but it's satisfying enough to enjoy entirely on its own. One bite and you'll feel like you've been transported straight to a sunny island kitchen.",
+    ingredientsList:["2 cups long-grain rice","1 can coconut milk","1 cup water","1 can kidney beans, drained","2 sprigs fresh thyme","1 clove garlic, minced","salt to taste"],
+    steps:["Combine coconut milk, water, garlic, and thyme in a pot and bring to a simmer.","Stir in the rice and kidney beans.","Cover and cook on low heat for 18-20 minutes until rice is tender and liquid is absorbed.","Remove thyme sprigs and fluff the rice with a fork.","Season with salt to taste before serving."] },
+
+  // ---------------- PASTA ----------------
+  { name:"Classic Spaghetti Bolognese", cuisine:"Italian", ingredients:"Spaghetti, ground beef, tomato, garlic", mood:"Hearty & Familiar", difficulty:"Easy", why:"The ultimate weeknight classic that everyone in the family loves.", mainBase:"Pasta", image:"https://loremflickr.com/600/400/spaghetti,bolognese", description:"This is the pasta dish most of us grew up on — a rich, slow-simmered sauce of ground beef, garlic, and tomatoes ladled generously over al dente spaghetti. Letting the sauce simmer a little longer deepens the flavor and helps it cling perfectly to every strand of pasta. It's endlessly forgiving, easy to double for a crowd, and reheats beautifully, making it a reliable go-to for busy weeknights.",
+    ingredientsList:["350g spaghetti","400g ground beef","1 can (400g) crushed tomatoes","3 cloves garlic, minced","1 onion, diced","2 tbsp tomato paste","2 tbsp olive oil","grated parmesan, to serve"],
+    steps:["Heat olive oil in a large pan and sauté onion and garlic until fragrant.","Add ground beef and cook until browned, breaking it up as it cooks.","Stir in tomato paste, then add crushed tomatoes and simmer for 25-30 minutes.","Meanwhile, cook spaghetti in salted boiling water until al dente; drain.","Toss the pasta with the sauce and top with grated parmesan before serving."] },
+  { name:"Creamy Fettuccine Alfredo", cuisine:"Italian", ingredients:"Fettuccine, cream, parmesan, butter", mood:"Indulgent & Cozy", difficulty:"Easy", why:"Rich, silky pasta ready in under 20 minutes.", mainBase:"Pasta", image:"https://loremflickr.com/600/400/fettuccine,alfredo", description:"With just a handful of ingredients — butter, cream, and freshly grated parmesan — this dish transforms simple fettuccine into something luxuriously silky. The sauce comes together in the time it takes the pasta to boil, making it one of the fastest routes to a truly indulgent dinner. It's rich enough to feel like a treat, yet simple enough to whip up on even the busiest weeknight.",
+    ingredientsList:["350g fettuccine","1 cup heavy cream","1 cup grated parmesan","4 tbsp butter","2 cloves garlic, minced","salt and black pepper to taste"],
+    steps:["Cook fettuccine in salted boiling water until al dente; reserve 1/2 cup pasta water and drain.","Melt butter in a pan and sauté garlic until fragrant.","Pour in cream and simmer gently for 2-3 minutes.","Stir in parmesan until melted and smooth, adding pasta water to loosen if needed.","Toss in the drained fettuccine, season with salt and pepper, and serve immediately."] },
+  { name:"Garlic Shrimp Linguine", cuisine:"Italian-American", ingredients:"Linguine, shrimp, garlic, chili flakes", mood:"Light & Zesty", difficulty:"Medium", why:"A restaurant-style dish you can make on a busy weeknight.", mainBase:"Pasta", image:"https://loremflickr.com/600/400/shrimp,linguine", description:"Plump shrimp are quickly seared in olive oil with plenty of garlic and a pinch of chili flakes, then tossed with linguine and a splash of the starchy pasta water to bring everything together into a light, glossy sauce. The whole dish takes barely 20 minutes from start to finish, but the bold garlicky, slightly spicy flavor tastes like something you'd order at a proper Italian restaurant.",
+    ingredientsList:["350g linguine","400g shrimp, peeled and deveined","4 cloves garlic, sliced","1/2 tsp chili flakes","3 tbsp olive oil","1 lemon, juiced","fresh parsley, chopped"],
+    steps:["Cook linguine in salted boiling water until al dente; reserve 1/2 cup pasta water and drain.","Heat olive oil in a pan and sauté garlic and chili flakes until fragrant.","Add shrimp and cook until pink and just cooked through, about 2-3 minutes per side.","Toss in the linguine with a splash of pasta water to create a light sauce.","Finish with lemon juice and chopped parsley before serving."] },
+  { name:"Pesto Penne", cuisine:"Italian", ingredients:"Penne, basil pesto, cherry tomatoes, pine nuts", mood:"Fresh & Herby", difficulty:"Easy", why:"A no-cook sauce that tastes like summer in a bowl.", mainBase:"Pasta", image:"https://loremflickr.com/600/400/pesto,pasta", description:"Vibrant basil pesto — bright with garlic, pine nuts, and parmesan — needs no cooking at all, so it comes together while your penne boils. Sweet burst cherry tomatoes add juicy freshness, and a scattering of toasted pine nuts brings a satisfying crunch. It's a wonderfully fast, herb-forward dinner that tastes like a little taste of an Italian summer, any time of year.",
+    ingredientsList:["350g penne","1/2 cup basil pesto","1 cup cherry tomatoes, halved","2 tbsp pine nuts, toasted","grated parmesan, to serve"],
+    steps:["Cook penne in salted boiling water until al dente; reserve 1/4 cup pasta water and drain.","Toss the hot pasta with basil pesto, loosening with a little pasta water if needed.","Fold in the halved cherry tomatoes.","Sprinkle with toasted pine nuts and grated parmesan.","Serve warm or at room temperature."] },
+  { name:"Baked Mac and Cheese", cuisine:"American", ingredients:"Macaroni, cheddar, milk, breadcrumbs", mood:"Nostalgic & Comforting", difficulty:"Easy", why:"Bubbly, cheesy comfort food loved by kids and adults alike.", mainBase:"Pasta", image:"https://loremflickr.com/600/400/macandcheese,food", description:"Tender macaroni gets folded into a velvety cheddar cheese sauce, then topped with a layer of buttery breadcrumbs and baked until golden and bubbling at the edges. The contrast between the crunchy top and the creamy interior is what makes this such a beloved comfort classic. It's a guaranteed crowd-pleaser at family dinners, potlucks, and everything in between.",
+    ingredientsList:["350g elbow macaroni","3 cups shredded cheddar cheese","2 cups milk","3 tbsp butter","3 tbsp flour","1/2 cup breadcrumbs"],
+    steps:["Cook macaroni in salted boiling water until al dente; drain.","Melt butter in a saucepan, whisk in flour, and cook for 1 minute.","Gradually whisk in milk and cook until thickened.","Stir in cheddar cheese until melted, then fold in the cooked macaroni.","Transfer to a baking dish, top with breadcrumbs, and bake at 190°C (375°F) for 20 minutes until golden."] },
+  { name:"Spaghetti Carbonara", cuisine:"Italian", ingredients:"Spaghetti, egg, pancetta, pecorino", mood:"Rich & Satisfying", difficulty:"Medium", why:"A silky, no-cream classic that's deceptively simple to make.", mainBase:"Pasta", image:"https://loremflickr.com/600/400/carbonara,pasta", description:"True carbonara gets its silky sauce not from cream, but from a careful blend of whisked eggs and salty pecorino cheese, tossed with hot pasta and crisped pancetta off the heat. The residual warmth gently cooks the eggs into a glossy, luxurious coating rather than scrambling them. It takes a bit of technique to get the timing right, but the payoff is one of Italy's most iconic and satisfying pasta dishes.",
+    ingredientsList:["350g spaghetti","150g pancetta, diced","3 large eggs","1 cup grated pecorino","2 cloves garlic","black pepper, freshly cracked"],
+    steps:["Cook spaghetti in salted boiling water until al dente; reserve 1/2 cup pasta water and drain.","Crisp the pancetta in a pan with garlic until golden; discard garlic.","Whisk eggs with pecorino and a generous amount of black pepper in a bowl.","Off the heat, toss the hot spaghetti with the pancetta, then quickly mix in the egg mixture, adding pasta water to create a silky sauce.","Serve immediately with extra pecorino and pepper on top."] },
+  { name:"Lemon Ricotta Pasta", cuisine:"Italian", ingredients:"Pasta, ricotta, lemon zest, parmesan", mood:"Bright & Refreshing", difficulty:"Easy", why:"A light pasta dish that feels fancy but takes minutes.", mainBase:"Pasta", image:"https://loremflickr.com/600/400/lemon,pasta", description:"Creamy ricotta melts into hot pasta water to create an effortlessly smooth sauce, while freshly grated lemon zest cuts through the richness with a bright, sunny lift. A shower of parmesan on top adds a savory finishing touch. It feels like a dish you'd get at a charming little trattoria, yet it comes together with barely any effort on a weeknight.",
+    ingredientsList:["350g pasta (spaghetti or penne)","1 cup ricotta cheese","1 lemon, zested and juiced","1/2 cup grated parmesan","2 tbsp olive oil","fresh basil, torn"],
+    steps:["Cook pasta in salted boiling water until al dente; reserve 1/2 cup pasta water and drain.","Whisk ricotta with a splash of pasta water until smooth and creamy.","Toss the hot pasta with the ricotta mixture, olive oil, lemon zest, and juice.","Fold in grated parmesan until well combined.","Garnish with fresh basil before serving."] },
+  { name:"Cold Sesame Pasta Salad", cuisine:"Asian Fusion", ingredients:"Pasta, sesame sauce, cucumber, scallion", mood:"Cool & Refreshing", difficulty:"Easy", why:"The perfect make-ahead lunch for hot summer days.", mainBase:"Pasta", image:"https://loremflickr.com/600/400/sesame,noodlesalad", description:"Chilled noodles are coated in a nutty, savory-sweet sesame dressing and tossed with crisp cucumber and sharp scallions for a refreshing crunch in every bite. Because it's served cold, it's an ideal make-ahead dish that only gets better as the flavors mingle in the fridge. It's a favorite for hot summer days, packed lunches, and potlucks alike.",
+    ingredientsList:["350g spaghetti or soba noodles","3 tbsp sesame paste (or peanut butter)","2 tbsp soy sauce","1 tbsp rice vinegar","1 tsp sesame oil","1 cucumber, julienned","2 scallions, sliced","1 tbsp toasted sesame seeds"],
+    steps:["Cook noodles according to package instructions, then rinse under cold water and drain well.","Whisk together sesame paste, soy sauce, rice vinegar, and sesame oil to make the dressing.","Toss the cold noodles with the dressing until evenly coated.","Add julienned cucumber and sliced scallions, tossing again to combine.","Chill for at least 30 minutes and garnish with toasted sesame seeds before serving."] },
+
+  // ---------------- BREAD ----------------
+  { name:"Avocado Toast", cuisine:"American", ingredients:"Sourdough bread, avocado, egg, chili flakes", mood:"Fresh & Energizing", difficulty:"Easy", why:"A trendy breakfast that's ready in just 5 minutes.", mainBase:"Bread", image:"https://loremflickr.com/600/400/avocadotoast,food", description:"Thick slices of crusty sourdough are toasted until golden, then piled high with mashed avocado seasoned simply with salt, lime, and a pinch of chili flakes for gentle heat. A perfectly cooked egg on top adds protein and a rich, runny finish that ties the whole thing together. It looks impressive with almost no effort, making it the ultimate quick breakfast for busy mornings.",
+    ingredientsList:["2 slices sourdough bread","1 ripe avocado","1 egg","1/2 lime, juiced","1/4 tsp chili flakes","salt to taste"],
+    steps:["Toast the sourdough slices until golden and crisp.","Mash the avocado with lime juice and a pinch of salt.","Fry or poach the egg to your preference.","Spread the mashed avocado generously over the toast.","Top with the egg and sprinkle with chili flakes before serving."] },
+  { name:"Garlic Bread", cuisine:"Italian-American", ingredients:"Baguette, butter, garlic, parsley", mood:"Warm & Buttery", difficulty:"Easy", why:"The perfect crispy side for any pasta night.", mainBase:"Bread", image:"https://loremflickr.com/600/400/garlicbread,food", description:"Slices of baguette are brushed with a fragrant mix of melted butter, minced garlic, and fresh parsley, then toasted until the edges turn deeply golden and crisp. The garlicky aroma alone is enough to make everyone gather in the kitchen before dinner is even served. It's the classic finishing touch to any pasta night, perfect for mopping up extra sauce.",
+    ingredientsList:["1 baguette, halved lengthwise","4 tbsp butter, softened","4 cloves garlic, minced","2 tbsp fresh parsley, chopped"],
+    steps:["Preheat the oven to 200°C (400°F).","Mix softened butter with minced garlic and chopped parsley.","Spread the garlic butter evenly over the cut sides of the baguette.","Bake for 8-10 minutes until the edges turn golden and crisp.","Slice and serve warm."] },
+  { name:"Grilled Cheese Sandwich", cuisine:"American", ingredients:"Bread, cheddar, butter", mood:"Nostalgic & Comforting", difficulty:"Easy", why:"A classic comfort food that never goes out of style.", mainBase:"Bread", image:"https://loremflickr.com/600/400/grilledcheese,food", description:"There's something timeless about the combination of buttery, golden-crisp bread and a gooey center of melted cheddar cheese. Cooked low and slow in a pan, the outside develops a satisfying crunch while the inside turns perfectly stretchy and melty. It's the kind of nostalgic, no-fuss comfort food that never fails to hit the spot, whatever the occasion.",
+    ingredientsList:["2 slices white or sandwich bread","2 slices cheddar cheese","2 tbsp butter, softened"],
+    steps:["Butter one side of each bread slice.","Place cheese between the slices with the buttered sides facing out.","Cook in a skillet over medium-low heat for 3-4 minutes per side.","Press gently with a spatula until the cheese melts and the bread turns golden.","Slice diagonally and serve hot."] },
+  { name:"French Toast", cuisine:"French-American", ingredients:"Bread, egg, milk, cinnamon", mood:"Sweet & Cozy", difficulty:"Easy", why:"A weekend breakfast treat the whole family will ask for again.", mainBase:"Bread", image:"https://loremflickr.com/600/400/frenchtoast,food", description:"Thick slices of bread are soaked in a cinnamon-spiced custard of eggs and milk, then pan-fried until the outside turns golden and slightly crisp while the inside stays soft and custardy. It's a wonderful way to use up slightly stale bread, transforming it into a warm, sweet weekend treat. Served with a drizzle of syrup, it's the kind of breakfast that gets requested again and again.",
+    ingredientsList:["4 thick slices bread (slightly stale)","2 eggs","1/2 cup milk","1/2 tsp cinnamon","1 tbsp butter, for frying","maple syrup, to serve"],
+    steps:["Whisk together eggs, milk, and cinnamon in a shallow dish.","Dip each bread slice into the mixture, soaking both sides briefly.","Melt butter in a skillet over medium heat.","Fry the soaked bread for 2-3 minutes per side until golden.","Serve warm with a drizzle of maple syrup."] },
+  { name:"Bruschetta", cuisine:"Italian", ingredients:"Baguette, tomato, basil, olive oil", mood:"Light & Summery", difficulty:"Easy", why:"A fresh, colorful appetizer that's ready in minutes.", mainBase:"Bread", image:"https://loremflickr.com/600/400/bruschetta,food", description:"Crisp toasted baguette slices are topped with a simple, vibrant mix of diced ripe tomatoes, fresh basil, and a generous drizzle of good olive oil. The combination of crunchy bread and juicy, herby topping makes this a light, refreshing starter that requires almost no cooking. It's an easy way to bring a taste of Italian summer to any table in just a few minutes.",
+    ingredientsList:["1 baguette, sliced","3 ripe tomatoes, diced","handful of fresh basil, chopped","2 tbsp olive oil","1 clove garlic","salt and pepper to taste"],
+    steps:["Toast the baguette slices until golden and crisp.","Rub each toasted slice lightly with the cut side of a garlic clove.","Mix diced tomatoes, basil, and olive oil in a bowl; season with salt and pepper.","Spoon the tomato mixture generously onto each toast.","Serve immediately while the bread is still crisp."] },
+  { name:"Banana Bread", cuisine:"American", ingredients:"Flour, banana, sugar, walnuts", mood:"Sweet & Homely", difficulty:"Easy", why:"The best way to use up overripe bananas.", mainBase:"Bread", image:"https://loremflickr.com/600/400/bananabread,food", description:"Overripe, spotty bananas are mashed and folded into a simple batter along with crunchy walnuts, creating a loaf that's naturally sweet, moist, and full of flavor. It fills the whole kitchen with a warm, homey aroma while it bakes, making it feel like an instant act of comfort. Sliced and served plain or with a little butter, it's just as good for breakfast as it is for an afternoon snack.",
+    ingredientsList:["3 overripe bananas, mashed","1 3/4 cups flour","3/4 cup sugar","1/3 cup melted butter","2 eggs","1 tsp baking soda","1/2 cup chopped walnuts"],
+    steps:["Preheat the oven to 175°C (350°F) and grease a loaf pan.","Mix mashed bananas with melted butter, sugar, and eggs.","Stir in flour and baking soda until just combined.","Fold in the chopped walnuts.","Pour into the loaf pan and bake for 55-60 minutes until a toothpick comes out clean."] },
+  { name:"Naan Pizza", cuisine:"Indian Fusion", ingredients:"Naan bread, tomato sauce, cheese, toppings", mood:"Fun & Quick", difficulty:"Easy", why:"A speedy pizza night hack using naan as the crust.", mainBase:"Bread", image:"https://loremflickr.com/600/400/naanpizza,food", description:"Soft, pillowy naan bread makes a surprisingly great shortcut pizza crust — no dough-making or rising time required. Simply spread on some tomato sauce, scatter over your favorite cheese and toppings, and bake until melty and slightly crisp at the edges. It's a fun, fast way to satisfy a pizza craving on a busy weeknight, and endlessly customizable for picky eaters.",
+    ingredientsList:["2 pieces naan bread","1/2 cup tomato sauce","1 cup shredded mozzarella","toppings of choice (pepperoni, peppers, olives)"],
+    steps:["Preheat the oven to 220°C (425°F).","Place naan bread on a baking tray and spread tomato sauce evenly over each piece.","Sprinkle shredded mozzarella over the sauce.","Add your favorite toppings.","Bake for 8-10 minutes until the cheese is melted and bubbly."] },
+  { name:"Egg Sandwich", cuisine:"American", ingredients:"Bread, egg, mayo, lettuce", mood:"Simple & Filling", difficulty:"Easy", why:"A protein-packed sandwich perfect for busy mornings.", mainBase:"Bread", image:"https://loremflickr.com/600/400/eggsandwich,food", description:"Soft-cooked eggs are gently folded with a touch of creamy mayo and piled between slices of soft bread with a layer of crisp lettuce for crunch. It's a simple, satisfying sandwich that comes together in minutes but keeps you full for hours thanks to the protein-rich filling. Perfect wrapped up for a grab-and-go breakfast or a quick lunchbox addition.",
+    ingredientsList:["4 slices soft bread","3 eggs, hard-boiled","2 tbsp mayonnaise","a few lettuce leaves","salt and pepper to taste"],
+    steps:["Boil the eggs until hard-boiled, then peel and chop them.","Mix chopped eggs with mayonnaise, salt, and pepper.","Lay out the bread slices and top two of them with lettuce leaves.","Spoon the egg mixture evenly over the lettuce.","Top with the remaining bread slices, cut in half, and serve."] },
+
+  // ---------------- NOODLES ----------------
+  { name:"Pad Thai", cuisine:"Thai", ingredients:"Rice noodles, shrimp, egg, peanuts, tamarind", mood:"Tangy & Exciting", difficulty:"Medium", why:"Sweet, sour, and savory noodles that taste like street food magic.", mainBase:"Noodles", image:"https://loremflickr.com/600/400/padthai,food", description:"Pad Thai is a beloved Thai street food classic built around a bold balance of sweet, sour, and savory flavors from tangy tamarind, fish sauce, and a touch of sugar. Chewy rice noodles are stir-fried quickly with shrimp and scrambled egg, then finished with crushed peanuts and a squeeze of lime for extra brightness. The whole dish comes together fast over high heat, capturing that irresistible smoky flavor found at Bangkok's busiest food stalls.",
+    ingredientsList:["200g flat rice noodles","200g shrimp, peeled","2 eggs","3 tbsp tamarind paste","2 tbsp fish sauce","2 tbsp sugar","1/4 cup crushed peanuts","1 lime, cut into wedges","bean sprouts, for garnish"],
+    steps:["Soak rice noodles in warm water until softened; drain.","Heat oil in a wok and stir-fry shrimp until pink; push to one side.","Crack eggs into the wok and scramble briefly.","Add drained noodles, tamarind paste, fish sauce, and sugar, tossing everything together over high heat.","Serve topped with crushed peanuts, bean sprouts, and a lime wedge."] },
+  { name:"Beef Ramen", cuisine:"Japanese", ingredients:"Ramen noodles, beef, broth, egg, scallion", mood:"Warm & Hearty", difficulty:"Medium", why:"A steaming bowl that instantly feels like comfort in a bowl.", mainBase:"Noodles", image:"https://loremflickr.com/600/400/ramen,food", description:"A deeply savory broth, simmered until rich and full-bodied, forms the soul of this hearty ramen bowl. Tender slices of beef, springy noodles, and a soft-boiled egg with a jammy yolk are layered on top, along with fresh scallions for a pop of color and bite. It's the kind of steaming, slurpable bowl that instantly warms you up on a cold or exhausting day.",
+    ingredientsList:["2 portions ramen noodles","4 cups beef or pork broth","200g thinly sliced beef","2 soft-boiled eggs, halved","2 scallions, sliced","2 tbsp soy sauce"],
+    steps:["Bring the broth to a simmer and season with soy sauce.","Sear the sliced beef quickly in a hot pan until just cooked.","Cook the ramen noodles according to package instructions; drain.","Divide noodles between bowls and ladle hot broth over the top.","Top with seared beef, a halved soft-boiled egg, and sliced scallions before serving."] },
+  { name:"Dan Dan Noodles", cuisine:"Chinese", ingredients:"Noodles, pork, chili oil, sesame paste", mood:"Bold & Spicy", difficulty:"Medium", why:"Spicy, nutty noodles that pack serious flavor in every bite.", mainBase:"Noodles", image:"https://loremflickr.com/600/400/dandan,noodles", description:"Originating from Sichuan cuisine, these noodles are tossed in a bold sauce built from nutty sesame paste, fiery chili oil, and savory minced pork, creating layers of heat and richness in every bite. The numbing spice from Sichuan peppercorns gives it a distinctive tingling kick that keeps you coming back for more. It's an intensely flavorful dish for anyone who loves noodles with a serious kick.",
+    ingredientsList:["250g wheat noodles","150g ground pork","2 tbsp sesame paste","2 tbsp chili oil","1 tsp Sichuan peppercorns, ground","2 tbsp soy sauce","2 scallions, chopped"],
+    steps:["Cook noodles in boiling water according to package instructions; drain.","Stir-fry ground pork in a hot pan until browned and crispy.","Whisk together sesame paste, chili oil, soy sauce, and ground Sichuan peppercorns in each serving bowl.","Add the cooked noodles to the bowls and toss with the sauce.","Top with the crispy pork and chopped scallions before serving."] },
+  { name:"Chicken Chow Mein", cuisine:"Chinese", ingredients:"Noodles, chicken, cabbage, soy sauce", mood:"Quick & Savory", difficulty:"Easy", why:"A takeout favorite you can make faster (and healthier) at home.", mainBase:"Noodles", image:"https://loremflickr.com/600/400/chowmein,food", description:"Springy noodles are stir-fried in a hot wok with tender strips of chicken and crisp cabbage, all coated in a glossy, savory soy-based sauce. The high heat gives the noodles a slightly smoky edge that's hard to replicate any other way. It's a familiar takeout favorite that's actually quicker, fresher, and healthier to make yourself at home.",
+    ingredientsList:["250g chow mein noodles","1 chicken breast, sliced thin","2 cups shredded cabbage","1 carrot, julienned","3 tbsp soy sauce","2 tbsp vegetable oil"],
+    steps:["Cook the noodles according to package instructions; drain and set aside.","Heat oil in a wok and stir-fry the chicken until cooked through.","Add cabbage and carrot, stir-frying until just tender-crisp.","Add the cooked noodles and soy sauce, tossing everything together over high heat.","Serve hot straight from the wok."] },
+  { name:"Vietnamese Pho", cuisine:"Vietnamese", ingredients:"Rice noodles, beef, broth, herbs", mood:"Soothing & Aromatic", difficulty:"Medium", why:"A fragrant noodle soup that warms you from the inside out.", mainBase:"Noodles", image:"https://loremflickr.com/600/400/pho,food", description:"Pho's magic lies in its broth — beef bones and warm spices like star anise and cinnamon are simmered for hours until deeply fragrant and clear. Silky rice noodles and thin slices of beef are bathed in the hot broth, then finished tableside with fresh herbs, bean sprouts, and a squeeze of lime. Each bowl is a soothing, aromatic experience that feels like a warm hug from the inside out.",
+    ingredientsList:["200g flat rice noodles","6 cups beef broth","2 star anise","1 cinnamon stick","200g beef sirloin, thinly sliced","fresh herbs (basil, cilantro)","bean sprouts and lime, to serve"],
+    steps:["Simmer beef broth with star anise and cinnamon stick for at least 30 minutes to infuse the flavors.","Soak rice noodles in hot water until softened; drain and divide into bowls.","Strain the fragrant broth and bring back to a rolling simmer.","Arrange thin raw beef slices over the noodles, then ladle the hot broth on top to cook the beef.","Serve with fresh herbs, bean sprouts, and lime wedges on the side."] },
+  { name:"Korean Japchae", cuisine:"Korean", ingredients:"Glass noodles, vegetables, beef, soy sauce", mood:"Colorful & Savory", difficulty:"Medium", why:"Glossy noodles tossed with veggies for a festive, crowd-pleasing dish.", mainBase:"Noodles", image:"https://loremflickr.com/600/400/japchae,food", description:"Chewy, glass-like sweet potato noodles are stir-fried with a rainbow of colorful vegetables and tender beef, all glazed in a savory-sweet soy sauce dressing. Each ingredient is traditionally cooked separately before being combined, which keeps every element vibrant and distinct in flavor and texture. It's a festive, crowd-pleasing dish often served at Korean celebrations and family gatherings.",
+    ingredientsList:["200g sweet potato glass noodles","150g beef, thinly sliced","1 carrot, julienned","1 cup spinach","1 onion, sliced","4 tbsp soy sauce","2 tbsp sugar","1 tbsp sesame oil"],
+    steps:["Cook glass noodles according to package instructions; drain and cut into shorter lengths.","Sauté the beef separately until cooked, then set aside.","Sauté the carrot, onion, and spinach separately until just tender.","Combine noodles, beef, and vegetables in a large bowl with soy sauce, sugar, and sesame oil.","Toss everything together well and serve warm or at room temperature."] },
+  { name:"Singapore Noodles", cuisine:"Singaporean", ingredients:"Vermicelli, curry powder, shrimp, egg", mood:"Spicy & Fragrant", difficulty:"Easy", why:"Curry-spiced noodles that are quick to make and full of flavor.", mainBase:"Noodles", image:"https://loremflickr.com/600/400/singaporenoodles,food", description:"Thin rice vermicelli noodles are stir-fried with a generous dusting of curry powder, giving them a warm golden color and fragrant spiced flavor. Juicy shrimp and scrambled egg add heartiness, while a quick toss over high heat keeps the noodles light and never mushy. It's a fast, aromatic dish that punches well above its short cooking time.",
+    ingredientsList:["200g rice vermicelli noodles","150g shrimp, peeled","2 eggs","2 tbsp curry powder","1 red bell pepper, sliced","2 tbsp soy sauce","2 tbsp vegetable oil"],
+    steps:["Soak vermicelli noodles in warm water until softened; drain.","Heat oil in a wok and scramble the eggs briefly; remove and set aside.","Stir-fry shrimp and bell pepper until the shrimp turns pink.","Add the noodles, curry powder, and soy sauce, tossing everything together over high heat.","Fold the scrambled eggs back in and serve immediately."] },
+  { name:"Udon Stir Fry", cuisine:"Japanese", ingredients:"Udon noodles, vegetables, soy sauce", mood:"Chewy & Satisfying", difficulty:"Easy", why:"Thick, chewy noodles tossed in a glossy savory glaze.", mainBase:"Noodles", image:"https://loremflickr.com/600/400/udon,food", description:"Thick, chewy udon noodles are stir-fried with crisp seasonal vegetables in a glossy, savory soy-based sauce that clings to every strand. Their satisfying bounce makes each bite feel substantial and comforting, even though the dish itself is quick and simple to prepare. It's an easy weeknight option when you want something warm, hearty, and packed with umami flavor.",
+    ingredientsList:["2 portions fresh udon noodles","1 cup broccoli florets","1 carrot, sliced","1 red bell pepper, sliced","3 tbsp soy sauce","1 tbsp oyster sauce","2 tbsp vegetable oil"],
+    steps:["Loosen the udon noodles under warm water and drain well.","Heat oil in a wok and stir-fry broccoli, carrot, and bell pepper until tender-crisp.","Add the udon noodles to the wok along with soy sauce and oyster sauce.","Toss everything together over high heat until the noodles are well coated and heated through.","Serve immediately while hot."] },
+
+  // ---------------- POTATO ----------------
+  { name:"Classic Mashed Potatoes", cuisine:"American", ingredients:"Potato, butter, milk, garlic", mood:"Cozy & Familiar", difficulty:"Easy", why:"Creamy comfort food that pairs with almost anything.", mainBase:"Potato", image:"https://loremflickr.com/600/400/mashedpotatoes,food", description:"Potatoes are boiled until fork-tender, then whipped with plenty of butter, warm milk, and a touch of garlic until impossibly smooth and creamy. The key to the fluffiest texture is not over-mixing, which keeps the potatoes light rather than gluey. This is the ultimate cozy side dish that pairs effortlessly with everything from roast chicken to a simple weeknight meatloaf.",
+    ingredientsList:["1kg potatoes, peeled and chopped","1/2 cup warm milk","4 tbsp butter","1 clove garlic, minced","salt to taste"],
+    steps:["Boil the potatoes in salted water until fork-tender, about 15-20 minutes; drain well.","Warm the milk with the minced garlic in a small pan.","Mash the potatoes while still hot until mostly smooth.","Stir in the butter and warm garlic milk gradually.","Season with salt to taste and serve warm."] },
+  { name:"Loaded Baked Potato", cuisine:"American", ingredients:"Potato, cheese, bacon, sour cream", mood:"Hearty & Indulgent", difficulty:"Easy", why:"A filling meal-in-one that's endlessly customizable.", mainBase:"Potato", image:"https://loremflickr.com/600/400/bakedpotato,food", description:"A whole potato is baked until the skin turns crisp and the inside becomes soft and fluffy, then split open and piled high with melted cheese, crispy bacon bits, and a generous dollop of cool sour cream. It's satisfying enough to be a meal on its own, yet flexible enough to customize with whatever toppings you have on hand. Perfect for busy nights when you want something hearty with minimal effort.",
+    ingredientsList:["4 large russet potatoes","1 cup shredded cheddar cheese","4 strips bacon, cooked and crumbled","1/2 cup sour cream","2 scallions, sliced"],
+    steps:["Preheat the oven to 220°C (425°F) and pierce each potato a few times with a fork.","Bake the potatoes directly on the oven rack for 45-60 minutes until the skin is crisp and the inside is tender.","Slice each potato open lengthwise and fluff the inside with a fork.","Top with shredded cheese while hot so it melts, then add crumbled bacon.","Finish with a dollop of sour cream and sliced scallions before serving."] },
+  { name:"Spanish Tortilla", cuisine:"Spanish", ingredients:"Potato, egg, onion", mood:"Simple & Rustic", difficulty:"Medium", why:"A humble potato omelette that's a beloved Spanish staple.", mainBase:"Potato", image:"https://loremflickr.com/600/400/spanishtortilla,food", description:"Thinly sliced potatoes and onions are slowly cooked in olive oil until soft and slightly caramelized, then bound together with beaten eggs and cooked into a thick, satisfying omelette. It's traditionally flipped whole in the pan, a small kitchen ritual that Spanish home cooks take pride in mastering. Delicious warm, at room temperature, or even cold the next day, it's a humble but beloved staple of Spanish cuisine.",
+    ingredientsList:["4 medium potatoes, thinly sliced","1 onion, thinly sliced","6 eggs","1/2 cup olive oil","salt to taste"],
+    steps:["Heat olive oil in a pan and slowly cook the potatoes and onion over low heat until soft, about 20 minutes.","Drain the potatoes and onion, reserving the oil, and let cool slightly.","Whisk the eggs in a large bowl and fold in the potatoes and onion.","Pour a little reserved oil into a non-stick pan, add the mixture, and cook over medium-low heat until the bottom sets.","Flip the tortilla using a plate and cook the other side until golden and just set in the center."] },
+  { name:"Potato Curry", cuisine:"Indian", ingredients:"Potato, tomato, spices", mood:"Warm & Spiced", difficulty:"Easy", why:"A budget-friendly curry that's big on comfort and flavor.", mainBase:"Potato", image:"https://loremflickr.com/600/400/potatocurry,food", description:"Chunks of potato are simmered in a warmly spiced tomato-based sauce until they turn tender and soak up all the flavor of cumin, turmeric, and coriander. It's an incredibly budget-friendly dish that still delivers deep, comforting spice and richness. Served with rice or warm bread, it's proof that simple, humble ingredients can make a truly satisfying curry.",
+    ingredientsList:["4 potatoes, cubed","2 tomatoes, chopped","1 onion, diced","1 tsp cumin","1 tsp turmeric","1 tsp ground coriander","2 tbsp oil","fresh cilantro, to garnish"],
+    steps:["Heat oil in a pot and sauté the onion until soft.","Add cumin, turmeric, and coriander, stirring until fragrant.","Stir in the chopped tomatoes and cook until they break down.","Add the cubed potatoes along with 1 cup of water, cover, and simmer for 20 minutes until tender.","Garnish with fresh cilantro and serve with rice or bread."] },
+  { name:"Crispy Roasted Potatoes", cuisine:"British", ingredients:"Potato, olive oil, rosemary", mood:"Crispy & Satisfying", difficulty:"Easy", why:"The perfect crunchy side for any Sunday roast dinner.", mainBase:"Potato", image:"https://loremflickr.com/600/400/roastedpotatoes,food", description:"Potato chunks are parboiled, then roughed up slightly before roasting in hot olive oil, which creates a wonderfully crispy, golden exterior while keeping the inside soft and fluffy. Fresh rosemary adds a fragrant, earthy note that pairs beautifully with the crunch. They're the classic finishing touch to a proper Sunday roast dinner, and disappear from the table fast.",
+    ingredientsList:["1kg potatoes, cut into chunks","4 tbsp olive oil","2 sprigs fresh rosemary","salt to taste"],
+    steps:["Parboil the potato chunks in salted water for 8-10 minutes; drain well.","Shake the colander to rough up the edges of the potatoes.","Toss the potatoes with olive oil and rosemary on a roasting tray.","Roast at 220°C (425°F) for 35-40 minutes, turning halfway, until golden and crisp.","Season with salt and serve hot."] },
+  { name:"Potato Leek Soup", cuisine:"French", ingredients:"Potato, leek, cream, broth", mood:"Soothing & Silky", difficulty:"Easy", why:"A velvety soup that's perfect for chilly evenings.", mainBase:"Potato", image:"https://loremflickr.com/600/400/potatosoup,food", description:"Sweet, mild leeks are gently sautéed before simmering with potatoes and broth until everything turns soft enough to blend into a silky, velvety soup. A splash of cream at the end rounds out the flavor and gives it a luxuriously smooth finish. It's the kind of soothing, elegant soup that feels equally at home on a chilly weeknight or as the starter to a special dinner.",
+    ingredientsList:["3 leeks, sliced (white and light green parts)","4 potatoes, chopped","4 cups vegetable broth","1/2 cup cream","2 tbsp butter"],
+    steps:["Melt butter in a pot and sauté the leeks until soft, about 5 minutes.","Add the chopped potatoes and vegetable broth, and bring to a simmer.","Cook for 20 minutes until the potatoes are very tender.","Blend the soup until smooth using an immersion blender.","Stir in the cream, season to taste, and serve warm."] },
+  { name:"Hash Browns", cuisine:"American", ingredients:"Potato, onion, oil", mood:"Crispy & Quick", difficulty:"Easy", why:"A breakfast classic that's ready in minutes.", mainBase:"Potato", image:"https://loremflickr.com/600/400/hashbrowns,food", description:"Shredded potatoes are pressed thin and fried in hot oil until the edges turn deeply golden and shatteringly crisp, while the center stays tender. A touch of finely diced onion adds extra flavor and a subtle sweetness as it caramelizes alongside the potato. They're a breakfast classic that comes together in minutes and pairs perfectly with eggs of any style.",
+    ingredientsList:["3 potatoes, peeled and shredded","1/4 onion, finely diced","3 tbsp oil","salt and pepper to taste"],
+    steps:["Squeeze the shredded potatoes to remove excess moisture.","Mix the potatoes with diced onion, salt, and pepper.","Heat oil in a skillet over medium-high heat.","Press the potato mixture into thin patties in the skillet and fry for 4-5 minutes per side until golden and crisp.","Drain briefly on paper towels and serve hot."] },
+  { name:"Potato Gnocchi", cuisine:"Italian", ingredients:"Potato, flour, egg", mood:"Pillowy & Comforting", difficulty:"Medium", why:"Soft potato dumplings that feel like a warm hug on a plate.", mainBase:"Potato", image:"https://loremflickr.com/600/400/gnocchi,food", description:"Soft mashed potatoes are gently worked with flour and egg into a tender dough, then rolled and cut into small pillowy dumplings that cook in just a minute or two of boiling water. The key is a light touch — overworking the dough makes them dense instead of fluffy. Tossed simply in butter and sage or a rich tomato sauce, gnocchi feels like a warm, comforting hug on a plate.",
+    ingredientsList:["1kg potatoes","2 cups flour","1 egg","salt to taste","butter and sage, to serve"],
+    steps:["Boil the potatoes whole with skins on until tender; drain and let cool slightly.","Peel and mash the potatoes while still warm until smooth.","Mix in the egg and flour gradually to form a soft dough.","Roll the dough into ropes and cut into small pillow-shaped pieces.","Boil the gnocchi in batches until they float to the surface, then toss with butter and sage."] },
+
+  // ---------------- SOUP ----------------
+  { name:"Chicken Noodle Soup", cuisine:"American", ingredients:"Chicken, noodles, carrot, celery", mood:"Soothing & Healing", difficulty:"Easy", why:"The ultimate cure for a cold day, or an actual cold.", mainBase:"Soup", image:"https://loremflickr.com/600/400/chickensoup,food", description:"A gentle, golden broth is simmered with tender pieces of chicken, sweet carrots, and crisp celery until every ingredient melds into one comforting bowl. Soft egg noodles soak up the savory broth, making each spoonful feel like an edible hug. It's the timeless dish people reach for whether they're feeling under the weather or just craving something simple and soothing.",
+    ingredientsList:["2 chicken breasts","6 cups chicken broth","2 carrots, sliced","2 celery stalks, sliced","1 onion, diced","1.5 cups egg noodles"],
+    steps:["Bring the chicken broth to a boil and add the chicken breasts.","Simmer for 15-20 minutes until the chicken is cooked through, then remove and shred.","Add carrots, celery, and onion to the broth and simmer until tender.","Add the egg noodles and cook until al dente.","Return the shredded chicken to the pot, season to taste, and serve hot."] },
+  { name:"Tomato Basil Soup", cuisine:"Italian-American", ingredients:"Tomato, basil, cream", mood:"Cozy & Classic", difficulty:"Easy", why:"Pairs perfectly with a grilled cheese sandwich.", mainBase:"Soup", image:"https://loremflickr.com/600/400/tomatosoup,food", description:"Ripe tomatoes are simmered down and blended until velvety smooth, then finished with fresh basil and a touch of cream for extra richness and a gentle sweetness. The bright, tangy tomato flavor shines through even with the creamy texture. It's the quintessential cozy soup, best enjoyed with a crispy grilled cheese sandwich for dipping.",
+    ingredientsList:["1kg ripe tomatoes, chopped (or 2 cans whole tomatoes)","1 onion, diced","2 cloves garlic","1/2 cup cream","handful of fresh basil","2 cups vegetable broth"],
+    steps:["Sauté onion and garlic in a pot until softened.","Add tomatoes and vegetable broth, then simmer for 20 minutes.","Blend the soup until smooth using an immersion blender.","Stir in the cream and fresh basil, and simmer for another 5 minutes.","Season to taste and serve hot with grilled cheese on the side."] },
+  { name:"Minestrone", cuisine:"Italian", ingredients:"Vegetables, beans, pasta, broth", mood:"Hearty & Wholesome", difficulty:"Easy", why:"A veggie-packed soup that's a meal in itself.", mainBase:"Soup", image:"https://loremflickr.com/600/400/minestrone,food", description:"This rustic Italian soup is loaded with whatever vegetables you have on hand, along with hearty beans and small pasta shapes simmered in a rich, tomato-based broth. It's a flexible, waste-nothing kind of recipe that changes slightly every time you make it, yet always turns out satisfying. Wholesome and filling enough to be a complete meal, it's a great way to sneak in extra vegetables.",
+    ingredientsList:["1 onion, diced","2 carrots, diced","2 celery stalks, diced","1 can diced tomatoes","1 can white beans, drained","1 cup small pasta shapes","4 cups vegetable broth"],
+    steps:["Sauté onion, carrot, and celery in a large pot until softened.","Add the diced tomatoes and vegetable broth, and bring to a simmer.","Stir in the white beans and simmer for 15 minutes.","Add the pasta and cook until al dente.","Season to taste and serve hot with a drizzle of olive oil."] },
+  { name:"Miso Soup", cuisine:"Japanese", ingredients:"Miso paste, tofu, seaweed", mood:"Light & Nourishing", difficulty:"Easy", why:"A quick, comforting soup that's ready in 10 minutes.", mainBase:"Soup", image:"https://loremflickr.com/600/400/misosoup,food", description:"A light dashi broth is gently whisked with savory miso paste, then simmered with soft cubes of tofu and delicate seaweed for a simple, nourishing bowl. It's meant to be made quickly and eaten right away, so the miso keeps its delicate flavor and doesn't turn bitter from overcooking. This humble, comforting soup is a staple of Japanese meals for good reason.",
+    ingredientsList:["4 cups dashi broth","3 tbsp miso paste","1/2 block tofu, cubed","2 tbsp dried wakame seaweed","1 scallion, sliced"],
+    steps:["Bring the dashi broth to a gentle simmer.","Ladle a little hot broth into a bowl and whisk in the miso paste until smooth.","Return the miso mixture to the pot along with the cubed tofu and seaweed.","Warm through gently without letting it boil.","Garnish with sliced scallion and serve immediately."] },
+  { name:"Corn Chowder", cuisine:"American", ingredients:"Corn, potato, cream", mood:"Sweet & Creamy", difficulty:"Easy", why:"A creamy bowl that celebrates sweet summer corn.", mainBase:"Soup", image:"https://loremflickr.com/600/400/cornchowder,food", description:"Sweet corn kernels are simmered with tender chunks of potato in a rich, creamy broth that highlights corn's natural sweetness. Blending a portion of the soup before stirring it back in gives the chowder its signature thick, velvety body while still leaving plenty of texture. It's the ultimate way to celebrate corn at its sweetest, whether that's peak summer or any time you're craving comfort.",
+    ingredientsList:["3 cups corn kernels (fresh or frozen)","2 potatoes, diced","1 onion, diced","1 cup cream","3 cups vegetable broth"],
+    steps:["Sauté the onion in a pot until softened.","Add the diced potatoes, corn, and vegetable broth, and simmer until the potatoes are tender.","Blend about a third of the soup until smooth, then stir it back into the pot.","Stir in the cream and heat through gently.","Season to taste and serve warm."] },
+  { name:"Lentil Soup", cuisine:"Middle Eastern", ingredients:"Lentils, cumin, carrot", mood:"Warm & Nutritious", difficulty:"Easy", why:"A protein-packed soup that's budget-friendly and filling.", mainBase:"Soup", image:"https://loremflickr.com/600/400/lentilsoup,food", description:"Earthy lentils are simmered with sweet carrots and a warm blend of cumin and other spices until they break down into a thick, hearty, nutritious soup. Lentils cook quickly and require no soaking, making this an easy weeknight option that's also incredibly budget-friendly. Packed with plant-based protein, it's a filling meal that doesn't skimp on flavor or nourishment.",
+    ingredientsList:["1.5 cups red lentils, rinsed","2 carrots, diced","1 onion, diced","1 tsp ground cumin","5 cups vegetable broth","1 tbsp olive oil"],
+    steps:["Heat olive oil in a pot and sauté the onion and carrot until softened.","Stir in the cumin and cook until fragrant.","Add the lentils and vegetable broth, and bring to a boil.","Reduce heat and simmer for 20-25 minutes until the lentils are soft and the soup has thickened.","Blend partially for a creamier texture if desired, season to taste, and serve hot."] },
+  { name:"French Onion Soup", cuisine:"French", ingredients:"Onion, broth, cheese, bread", mood:"Rich & Comforting", difficulty:"Medium", why:"Caramelized onions and melted cheese in every spoonful.", mainBase:"Soup", image:"https://loremflickr.com/600/400/frenchonionsoup,food", description:"Onions are cooked low and slow until they turn deeply caramelized and almost jammy, forming the rich, sweet backbone of this classic French soup. A slice of toasted bread and a generous layer of melted cheese are broiled right on top, creating a bubbly, golden crust you have to break through with your spoon. It's an indulgent, restaurant-worthy dish that's well worth the slower cooking time.",
+    ingredientsList:["4 large onions, thinly sliced","6 cups beef broth","3 tbsp butter","4 slices baguette, toasted","1.5 cups grated gruyère cheese"],
+    steps:["Melt butter in a large pot and cook the onions over low heat for 30-40 minutes, stirring occasionally, until deeply caramelized.","Pour in the beef broth and simmer for 15-20 minutes.","Ladle the soup into oven-safe bowls and top each with a slice of toasted baguette.","Sprinkle generously with grated gruyère cheese.","Broil until the cheese is melted and bubbly, then serve immediately."] },
+  { name:"Butternut Squash Soup", cuisine:"American", ingredients:"Squash, cream, nutmeg", mood:"Cozy & Autumnal", difficulty:"Easy", why:"A silky soup that tastes like fall in a bowl.", mainBase:"Soup", image:"https://loremflickr.com/600/400/squashsoup,food", description:"Roasted butternut squash is blended until silky smooth, then gently spiced with warm nutmeg and finished with a touch of cream for extra body. Roasting the squash first deepens its natural sweetness and adds a subtle caramelized flavor you can't get from boiling alone. This velvety soup captures the essence of autumn in a single comforting bowl.",
+    ingredientsList:["1 large butternut squash, cubed","1 onion, diced","1/4 tsp nutmeg","1/2 cup cream","4 cups vegetable broth","2 tbsp olive oil"],
+    steps:["Toss the squash cubes with olive oil and roast at 200°C (400°F) for 30 minutes until tender and caramelized.","Sauté the onion in a pot until softened.","Add the roasted squash and vegetable broth, and simmer for 10 minutes.","Blend until smooth, then stir in the nutmeg and cream.","Warm through gently, season to taste, and serve."] },
+
+  // ---------------- SALAD / BOWL ----------------
+  { name:"Greek Salad", cuisine:"Greek", ingredients:"Cucumber, tomato, feta, olives, olive oil", mood:"Fresh & Light", difficulty:"Easy", why:"A crisp, no-cook salad ready in under 10 minutes.", mainBase:"Salad", image:"https://loremflickr.com/600/400/greeksalad,food", description:"Crisp cucumber, juicy tomatoes, and briny Kalamata olives are tossed together with thick slabs of tangy feta cheese and a generous drizzle of good olive oil. No lettuce needed here — the vegetables themselves are the star, kept simple so their fresh flavors truly shine through. It's a refreshing, no-cook salad that comes together in minutes and tastes even better with a squeeze of lemon.",
+    ingredientsList:["2 cucumbers, chopped","3 tomatoes, chopped","200g feta cheese, sliced","1/2 cup Kalamata olives","1/4 red onion, thinly sliced","3 tbsp olive oil","1 tsp dried oregano"],
+    steps:["Combine cucumber, tomato, red onion, and olives in a large bowl.","Top with the sliced feta cheese.","Drizzle generously with olive oil.","Sprinkle with dried oregano.","Toss gently just before serving to keep the feta intact."] },
+  { name:"Chicken Caesar Salad", cuisine:"American", ingredients:"Romaine, chicken, parmesan, croutons", mood:"Satisfying & Classic", difficulty:"Easy", why:"A protein-packed salad that actually keeps you full.", mainBase:"Salad", image:"https://loremflickr.com/600/400/caesarsalad,food", description:"Crisp romaine lettuce is tossed in a creamy, garlicky Caesar dressing, then topped with juicy grilled chicken, shaved parmesan, and crunchy croutons for contrast. Unlike lighter salads, the protein and satisfying crunch make this one hearty enough to keep you full well past lunchtime. It's a timeless classic that proves salads don't have to feel like a compromise.",
+    ingredientsList:["1 head romaine lettuce, chopped","2 chicken breasts, grilled and sliced","1/2 cup shaved parmesan","1 cup croutons","1/2 cup Caesar dressing"],
+    steps:["Season and grill the chicken breasts until cooked through; let rest, then slice.","Toss the chopped romaine with Caesar dressing in a large bowl.","Add the croutons and toss again lightly.","Top with the sliced grilled chicken.","Finish with shaved parmesan before serving."] },
+  { name:"Buddha Bowl", cuisine:"American Fusion", ingredients:"Quinoa, chickpeas, avocado, kale", mood:"Nourishing & Balanced", difficulty:"Easy", why:"A colorful, customizable bowl that's as healthy as it is pretty.", mainBase:"Salad", image:"https://loremflickr.com/600/400/buddhabowl,food", description:"Fluffy quinoa forms the base for this nourishing bowl, topped with crispy roasted chickpeas, creamy avocado slices, and hearty massaged kale. Every component is chosen for both nutrition and color, making the final bowl as beautiful to look at as it is satisfying to eat. It's endlessly customizable, so you can swap in whatever grains, greens, or proteins you have on hand.",
+    ingredientsList:["1 cup quinoa, cooked","1 can chickpeas, drained","1 avocado, sliced","2 cups kale, massaged with olive oil","2 tbsp olive oil","1 tsp paprika"],
+    steps:["Toss chickpeas with olive oil and paprika, then roast at 200°C (400°F) for 20 minutes until crispy.","Massage the kale with a little olive oil and a pinch of salt until softened.","Divide the cooked quinoa between bowls as the base.","Arrange the kale, roasted chickpeas, and sliced avocado on top.","Drizzle with your favorite dressing before serving."] },
+  { name:"Poke Bowl", cuisine:"Hawaiian", ingredients:"Rice, ahi tuna, avocado, soy sauce", mood:"Fresh & Vibrant", difficulty:"Easy", why:"A restaurant-style bowl you can build at home in minutes.", mainBase:"Salad", image:"https://loremflickr.com/600/400/pokebowl,food", description:"Cubes of fresh ahi tuna are marinated briefly in soy sauce and sesame oil, then served over a bed of warm rice with creamy avocado and your favorite crunchy toppings. The dish celebrates the natural quality of the fish, so freshness matters more than complicated technique. It's a vibrant, restaurant-style bowl that's surprisingly simple to recreate in your own kitchen.",
+    ingredientsList:["300g sushi-grade ahi tuna, cubed","2 cups cooked rice","1 avocado, diced","3 tbsp soy sauce","1 tsp sesame oil","1 tbsp sesame seeds","1 scallion, sliced"],
+    steps:["Combine soy sauce and sesame oil in a bowl.","Add the cubed tuna and marinate for 10-15 minutes in the fridge.","Divide the warm rice between bowls.","Top with the marinated tuna and diced avocado.","Garnish with sesame seeds and sliced scallion before serving."] },
+  { name:"Cobb Salad", cuisine:"American", ingredients:"Lettuce, egg, bacon, avocado, blue cheese", mood:"Hearty & Filling", difficulty:"Easy", why:"A protein-loaded salad that doubles as a full meal.", mainBase:"Salad", image:"https://loremflickr.com/600/400/cobbsalad,food", description:"Neat rows of hard-boiled egg, crispy bacon, creamy avocado, and tangy blue cheese are arranged over a bed of crisp lettuce, creating a salad that's as visually striking as it is filling. Each element brings its own distinct flavor and texture, so every forkful tastes a little different. It's hearty enough to serve as a complete meal rather than just a side.",
+    ingredientsList:["1 head lettuce, chopped","3 eggs, hard-boiled and sliced","4 strips bacon, cooked and crumbled","1 avocado, sliced","1/2 cup crumbled blue cheese","2 tomatoes, diced"],
+    steps:["Arrange the chopped lettuce as the base on a large platter.","Arrange rows of sliced egg, crumbled bacon, diced tomato, sliced avocado, and blue cheese on top.","Keep each ingredient in its own neat row for the classic Cobb presentation.","Drizzle with your favorite vinaigrette.","Toss just before serving, or serve as is for presentation."] },
+  { name:"Quinoa Power Bowl", cuisine:"American", ingredients:"Quinoa, roasted vegetables, tahini", mood:"Energizing & Wholesome", difficulty:"Easy", why:"A meal-prep favorite that's just as good the next day.", mainBase:"Salad", image:"https://loremflickr.com/600/400/quinoabowl,food", description:"Protein-rich quinoa is paired with a colorful medley of roasted seasonal vegetables, then finished with a creamy, nutty tahini drizzle that ties everything together. Because it holds up so well in the fridge, it's a favorite for meal prepping ahead of a busy week. Wholesome, energizing, and satisfying, it tastes just as good cold the next day as it does freshly made.",
+    ingredientsList:["1 cup quinoa, cooked","1 zucchini, chopped","1 red bell pepper, chopped","1 cup cherry tomatoes","3 tbsp tahini","1 lemon, juiced","2 tbsp olive oil"],
+    steps:["Toss the zucchini, bell pepper, and cherry tomatoes with olive oil.","Roast at 200°C (400°F) for 20-25 minutes until tender and slightly caramelized.","Whisk together tahini, lemon juice, and a splash of water to make the dressing.","Divide the cooked quinoa between bowls and top with the roasted vegetables.","Drizzle with the tahini dressing before serving."] },
+  { name:"Caprese Salad", cuisine:"Italian", ingredients:"Tomato, mozzarella, basil, balsamic", mood:"Light & Elegant", difficulty:"Easy", why:"A simple 4-ingredient salad that always looks impressive.", mainBase:"Salad", image:"https://loremflickr.com/600/400/capresesalad,food", description:"Thick slices of ripe tomato and fresh mozzarella are layered together with fragrant basil leaves, then finished with a drizzle of sweet-tangy balsamic glaze and good olive oil. With only four main ingredients, the quality of each one really matters, so this is the perfect dish to make when tomatoes are at their peak. It's simple, elegant, and always looks impressive on the table.",
+    ingredientsList:["3 large ripe tomatoes, sliced","250g fresh mozzarella, sliced","handful of fresh basil leaves","2 tbsp balsamic glaze","2 tbsp olive oil","salt and pepper to taste"],
+    steps:["Arrange alternating slices of tomato and mozzarella on a platter.","Tuck fresh basil leaves between the slices.","Drizzle with olive oil and balsamic glaze.","Season with salt and freshly cracked pepper.","Serve immediately at room temperature for the best flavor."] },
+  { name:"Asian Chicken Salad Bowl", cuisine:"Asian Fusion", ingredients:"Cabbage, chicken, sesame dressing, almonds", mood:"Crunchy & Zesty", difficulty:"Easy", why:"A crunchy, flavor-packed salad that's a lunchbox favorite.", mainBase:"Salad", image:"https://loremflickr.com/600/400/asiansalad,food", description:"Crisp shredded cabbage and tender chicken are tossed together in a nutty, tangy sesame dressing, then topped with toasted almonds for extra crunch. The dressing is bold enough to stand up to the crisp vegetables without wilting them, so it holds up beautifully even after a few hours in a packed lunch. It's a zesty, flavor-packed salad that makes eating your veggies genuinely exciting.",
+    ingredientsList:["4 cups shredded cabbage","2 cooked chicken breasts, shredded","1/4 cup sliced almonds, toasted","3 tbsp sesame dressing","1 carrot, julienned","2 scallions, sliced"],
+    steps:["Combine shredded cabbage, carrot, and scallions in a large bowl.","Add the shredded chicken on top.","Drizzle with sesame dressing and toss well to coat.","Sprinkle with toasted almonds.","Serve immediately, or pack for a lunchbox that holds up for hours."] },
+
+  // ---------------- DESSERT ----------------
+  { name:"Chocolate Chip Cookies", cuisine:"American", ingredients:"Flour, butter, chocolate chips", mood:"Sweet & Joyful", difficulty:"Easy", why:"The classic treat that never fails to please a crowd.", mainBase:"Dessert", image:"https://loremflickr.com/600/400/chocolatechipcookies,food", description:"Butter is creamed with sugar until light and fluffy, then studded generously with chocolate chips before baking into cookies with crisp edges and soft, chewy centers. The smell alone as they bake is enough to bring everyone into the kitchen. This is the classic treat that never goes out of style, equally perfect for lunchboxes, bake sales, or a late-night snack.",
+    ingredientsList:["2 1/4 cups flour","1 cup butter, softened","3/4 cup sugar","3/4 cup brown sugar","2 eggs","2 cups chocolate chips","1 tsp baking soda"],
+    steps:["Preheat the oven to 190°C (375°F) and line baking sheets with parchment.","Cream the butter with both sugars until light and fluffy.","Beat in the eggs, then mix in the flour and baking soda until just combined.","Fold in the chocolate chips.","Scoop onto the baking sheets and bake for 9-11 minutes until the edges are golden."] },
+  { name:"Tiramisu", cuisine:"Italian", ingredients:"Mascarpone, coffee, ladyfingers", mood:"Elegant & Dreamy", difficulty:"Medium", why:"A no-bake dessert that tastes like a café treat.", mainBase:"Dessert", image:"https://loremflickr.com/600/400/tiramisu,food", description:"Delicate ladyfinger biscuits are briefly dipped in strong coffee, then layered with a rich, airy mascarpone cream and dusted with cocoa powder. Since it needs to chill for a few hours before serving, the flavors have time to meld into something wonderfully cohesive and dreamy. This elegant, no-bake dessert tastes just like something from a fine Italian café, without ever needing to turn on the oven.",
+    ingredientsList:["250g mascarpone cheese","2 eggs, separated","1/2 cup sugar","24 ladyfinger biscuits","1.5 cups strong brewed coffee, cooled","cocoa powder, for dusting"],
+    steps:["Whisk egg yolks with sugar until pale, then fold in the mascarpone until smooth.","Whip the egg whites to stiff peaks and gently fold into the mascarpone mixture.","Quickly dip each ladyfinger into the cooled coffee and arrange in a single layer in a dish.","Spread half the mascarpone cream over the ladyfingers, then repeat with another layer.","Dust generously with cocoa powder and chill for at least 4 hours before serving."] },
+  { name:"Molten Chocolate Cake", cuisine:"French", ingredients:"Chocolate, butter, egg", mood:"Decadent & Romantic", difficulty:"Medium", why:"A gooey molten center that makes every bite feel special.", mainBase:"Dessert", image:"https://loremflickr.com/600/400/moltenlavacake,food", description:"Rich chocolate cake batter is baked just until the edges set while the center stays deliberately underbaked, creating a warm, gooey molten core that oozes out the moment you cut into it. Timing is everything here, so pulling it from the oven at just the right moment is key to that dramatic reveal. It's a decadent, romantic dessert that turns any evening into something special.",
+    ingredientsList:["115g dark chocolate","115g butter","2 eggs plus 2 egg yolks","1/2 cup sugar","1/4 cup flour"],
+    steps:["Preheat the oven to 220°C (425°F) and butter individual ramekins.","Melt the chocolate and butter together until smooth.","Whisk the eggs, egg yolks, and sugar until pale and thick.","Fold in the melted chocolate mixture, then gently fold in the flour.","Divide between ramekins and bake for 10-12 minutes until the edges are set but the center is still soft; invert onto plates and serve immediately."] },
+  { name:"Apple Pie", cuisine:"American", ingredients:"Apple, cinnamon, pie crust", mood:"Nostalgic & Homely", difficulty:"Medium", why:"A timeless dessert perfect for family gatherings.", mainBase:"Dessert", image:"https://loremflickr.com/600/400/applepie,food", description:"Tender apple slices are tossed with warm cinnamon and a touch of sugar, then baked between flaky, buttery layers of pie crust until golden and bubbling. The smell of cinnamon and baked apples filling the house is practically a tradition in itself. This timeless, nostalgic dessert has earned its place as the centerpiece of countless family gatherings and holiday tables.",
+    ingredientsList:["6 apples, peeled and sliced","3/4 cup sugar","1.5 tsp cinnamon","2 pie crusts (top and bottom)","2 tbsp butter, cubed","1 tbsp flour"],
+    steps:["Preheat the oven to 200°C (400°F) and line a pie dish with one crust.","Toss the sliced apples with sugar, cinnamon, and flour.","Fill the crust with the apple mixture and dot with butter.","Cover with the second crust, sealing and crimping the edges, and cut a few vents on top.","Bake for 45-50 minutes until the crust is golden and the filling is bubbling."] },
+  { name:"Mango Sticky Rice", cuisine:"Thai", ingredients:"Sticky rice, mango, coconut milk", mood:"Tropical & Sweet", difficulty:"Easy", why:"A sweet finish that transports you straight to Thailand.", mainBase:"Dessert", image:"https://loremflickr.com/600/400/mangostickyrice,food", description:"Glutinous sticky rice is steamed until tender, then soaked in sweetened coconut milk until it turns rich and slightly chewy. Served alongside thick slices of ripe, juicy mango and an extra drizzle of coconut cream, the combination of warm rice and cool fruit is a beloved Thai dessert. One bite and you'll feel like you're enjoying it fresh off a street cart in Bangkok.",
+    ingredientsList:["1.5 cups glutinous sticky rice, soaked overnight","1 cup coconut milk","1/3 cup sugar","1/4 tsp salt","2 ripe mangoes, sliced"],
+    steps:["Steam the soaked sticky rice for 20-25 minutes until tender.","Warm the coconut milk with sugar and salt until the sugar dissolves.","Pour most of the sweetened coconut milk over the hot rice and let it soak in for 10-15 minutes.","Slice the ripe mangoes just before serving.","Plate the sticky rice with mango slices and drizzle with the remaining coconut milk."] },
+  { name:"Fluffy Pancakes", cuisine:"American", ingredients:"Flour, egg, milk, syrup", mood:"Sweet & Fluffy", difficulty:"Easy", why:"A weekend breakfast treat that doubles as dessert.", mainBase:"Dessert", image:"https://loremflickr.com/600/400/pancakes,food", description:"A simple batter of flour, eggs, and milk is whisked just enough to keep the pancakes tender, then cooked in a hot pan until each one puffs up light and fluffy. Stacked high and finished with a generous pour of warm maple syrup, they feel indulgent enough to double as a dessert. It's a weekend breakfast tradition that the whole family looks forward to.",
+    ingredientsList:["1.5 cups flour","2 tbsp sugar","2 tsp baking powder","1.25 cups milk","1 egg","3 tbsp melted butter","maple syrup, to serve"],
+    steps:["Whisk together flour, sugar, and baking powder in a bowl.","In a separate bowl, whisk the milk, egg, and melted butter.","Pour the wet ingredients into the dry ingredients and stir just until combined (a few lumps are fine).","Heat a lightly greased skillet over medium heat and pour in batter for each pancake.","Cook until bubbles form on top, flip, and cook until golden; serve stacked with maple syrup."] },
+  { name:"Classic Cheesecake", cuisine:"American", ingredients:"Cream cheese, sugar, graham crust", mood:"Rich & Creamy", difficulty:"Medium", why:"A crowd-pleaser that's easier to make than it looks.", mainBase:"Dessert", image:"https://loremflickr.com/600/400/cheesecake,food", description:"A buttery graham cracker crust supports a thick, velvety filling of sweetened cream cheese baked low and slow until perfectly set but still creamy. Baking it gently and letting it cool gradually helps prevent cracks on top, giving it that clean, bakery-style finish. It looks like an impressive showstopper, but it's actually far more approachable to make at home than most people expect.",
+    ingredientsList:["1.5 cups graham cracker crumbs","6 tbsp melted butter","900g cream cheese, softened","1 cup sugar","3 eggs","1 tsp vanilla extract"],
+    steps:["Mix graham cracker crumbs with melted butter and press into the base of a springform pan.","Beat the cream cheese and sugar until smooth and creamy.","Add the eggs one at a time, beating gently after each addition, then stir in vanilla.","Pour the filling over the crust and bake at 160°C (325°F) for 55-60 minutes until the center is just set.","Cool gradually in the oven with the door ajar, then chill for at least 4 hours before slicing."] },
+  { name:"Banana Pudding", cuisine:"American", ingredients:"Banana, vanilla pudding, cookies", mood:"Sweet & Nostalgic", difficulty:"Easy", why:"A layered treat that's always a hit at potlucks.", mainBase:"Dessert", image:"https://loremflickr.com/600/400/bananapudding,food", description:"Layers of creamy vanilla pudding, fresh banana slices, and soft vanilla cookies are stacked together and chilled until the cookies soften into a cake-like texture. As it sits, the flavors meld together into something greater than the sum of its parts. This nostalgic, no-bake layered dessert is a guaranteed hit at potlucks, barbecues, and family gatherings alike.",
+    ingredientsList:["3 cups prepared vanilla pudding","4 bananas, sliced","1 box vanilla wafer cookies","1 cup whipped cream"],
+    steps:["Spread a thin layer of vanilla pudding in the bottom of a serving dish.","Add a layer of vanilla wafer cookies followed by a layer of sliced bananas.","Repeat the layers, ending with a layer of pudding on top.","Cover and chill for at least 4 hours until the cookies soften.","Top with whipped cream just before serving."] }
+];
+
+// ---------- State ----------
+let selectedBase = null;
+let lastShownName = null;
+
+// ---------- DOM References ----------
+const baseOptions = document.getElementById('baseOptions');
+const spinBtn = document.getElementById('spinBtn');
+const surpriseBtn = document.getElementById('surpriseBtn');
+const recipeCard = document.getElementById('recipeCard');
+const cardStack = document.getElementById('cardStack');
+const ctaSection = document.getElementById('ctaSection');
+
+const cardImage = document.getElementById('cardImage');
+const cardBase = document.getElementById('cardBase');
+const cardName = document.getElementById('cardName');
+const cardDescription = document.getElementById('cardDescription');
+const cardDifficulty = document.getElementById('cardDifficulty');
+const cardWhy = document.getElementById('cardWhy');
+const cardIngredientsList = document.getElementById('cardIngredientsList');
+const cardStepsList = document.getElementById('cardStepsList');
+
+// ---------- Step 1: Base selection ----------
+baseOptions.addEventListener('click', (e) => {
+  const chip = e.target.closest('.base-chip');
+  if (!chip) return;
+
+  // toggle active state
+  document.querySelectorAll('.base-chip').forEach(c => c.classList.remove('active'));
+  chip.classList.add('active');
+
+  selectedBase = chip.dataset.base;
+  spinBtn.disabled = false;
+});
+
+// ---------- Step 2: Spin logic ----------
+function spinFromBase(base) {
+  let pool = (!base || base === 'Any')
+    ? RECIPES
+    : RECIPES.filter(r => r.mainBase === base);
+
+  // fallback safety net (should not trigger given full dataset)
+  if (pool.length === 0) pool = RECIPES;
+
+  // avoid repeating the same dish twice in a row when possible
+  let candidates = pool.filter(r => r.name !== lastShownName);
+  if (candidates.length === 0) candidates = pool;
+
+  const pick = candidates[Math.floor(Math.random() * candidates.length)];
+  lastShownName = pick.name;
+
+  renderCard(pick);
+}
+
+spinBtn.addEventListener('click', () => {
+  if (!selectedBase) return;
+  spinFromBase(selectedBase);
+});
+
+// "Surprise Me" button spins immediately from the full recipe pool,
+// without requiring a main-base selection first.
+surpriseBtn.addEventListener('click', () => {
+  // clear any active base chip selection to avoid confusing UI state
+  document.querySelectorAll('.base-chip').forEach(c => c.classList.remove('active'));
+  spinFromBase('Any');
+});
+
+// ---------- Render / animate card ----------
+function renderCard(dish) {
+  const isFirstReveal = recipeCard.hasAttribute('hidden');
+
+  if (isFirstReveal) {
+    // Step 1: shrink + fade out the placeholder stack completely first,
+    // so it fully disappears before the recipe card enters — avoids the
+    // brief side-by-side "jump" that happens when both elements share
+    // the flex row at the same time.
+    cardStack.classList.add('stack-fade-out');
+    setTimeout(() => {
+      cardStack.hidden = true;
+      // Step 2: only now bring the real recipe card into the flow and
+      // play its entrance animation, so the transition reads as one
+      // smooth continuous motion rather than two overlapping ones.
+      fillCard(dish);
+      recipeCard.hidden = false;
+      recipeCard.classList.add('card-appear');
+      setTimeout(() => recipeCard.classList.remove('card-appear'), 650);
+    }, 420);
+  } else {
+    // flip-out, then flip-in with new content
+    recipeCard.classList.add('card-flip-out');
+    setTimeout(() => {
+      fillCard(dish);
+      recipeCard.classList.remove('card-flip-out');
+      recipeCard.classList.add('card-flip-in');
+      setTimeout(() => recipeCard.classList.remove('card-flip-in'), 600);
+    }, 280);
+  }
+}
+
+function fillCard(dish) {
+  cardImage.src = dish.image;
+  cardImage.alt = dish.name;
+  cardBase.textContent = dish.mainBase;
+  cardName.textContent = dish.name;
+  cardDescription.textContent = dish.description;
+  cardWhy.textContent = dish.why || '';
+
+  cardDifficulty.textContent = dish.difficulty;
+  cardDifficulty.className = 'difficulty-tag ' + (dish.difficulty || 'Easy').toLowerCase();
+
+  cardIngredientsList.innerHTML = '';
+  (dish.ingredientsList || []).forEach(item => {
+    const li = document.createElement('li');
+    li.textContent = item;
+    cardIngredientsList.appendChild(li);
+  });
+
+  cardStepsList.innerHTML = '';
+  (dish.steps || []).forEach(step => {
+    const li = document.createElement('li');
+    li.textContent = step;
+    cardStepsList.appendChild(li);
+  });
+}
+</script>
+
+</body>
+</html>
