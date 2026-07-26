@@ -45,6 +45,14 @@
     position:relative;
     z-index:1;
   }
+  .header-logo{
+    display:block;
+    width:112px;
+    height:auto;
+    margin:0 auto 14px;
+    filter:drop-shadow(0 8px 16px rgba(63,45,34,0.18));
+  }
+
   .brand{
     display:inline-flex;
     align-items:center;
