@@ -32,10 +32,19 @@
   h1,h2,h3{ font-family:'Poppins', sans-serif; }
 
   .app-container{
-    max-width:720px;
+    max-width:920px;
     margin:0 auto;
     padding:32px 20px 60px;
     position:relative;
+  }
+
+  header,
+  .selector-panel,
+  .cta-section,
+  footer.note{
+    max-width:720px;
+    margin-left:auto;
+    margin-right:auto;
   }
 
   /* Header */
@@ -303,7 +312,7 @@
     border-radius:26px;
     overflow:hidden;
     width:100%;
-    max-width:680px;
+    max-width:860px;
     box-shadow:0 18px 40px rgba(63,45,34,0.2);
     border:1px solid var(--border);
     transform-origin:center;
@@ -315,6 +324,10 @@
     aspect-ratio:1 / 1;
     overflow:hidden;
     background:var(--cream-soft);
+    border:1px solid var(--border);
+    border-radius:18px;
+    box-shadow:0 8px 18px rgba(63,45,34,0.14);
+    margin-bottom:18px;
   }
   .card-image-wrap img{
     width:100%;
@@ -359,10 +372,10 @@
     z-index:1;
   }
   .card-page-left{
-    padding:22px 18px 26px 24px;
+    padding:28px 26px 30px 30px;
   }
   .card-page-right{
-    padding:22px 24px 26px 18px;
+    padding:24px 30px 30px 24px;
     background:#E6EBD8;
   }
   .card-title-row{
@@ -458,7 +471,7 @@
     position:relative;
   }
   .why-love i{
-    color:var(--sage-dark);
+    color:#D94A3A;
     margin-right:6px;
   }
 
@@ -605,7 +618,7 @@
 
   /* Tablet & below: stack the book pages into a single column */
   @media (max-width:768px){
-    .recipe-card{ max-width:420px; }
+    .recipe-card{ max-width:560px; }
     .card-body{ grid-template-columns:1fr; }
     .card-body::before{ display:none; }
     .card-page-left{ padding:22px 22px 8px; }
@@ -615,6 +628,7 @@
       border-top:2px dashed var(--border);
       margin-top:6px;
     }
+    .card-image-wrap{ margin-bottom:16px; }
   }
 
   /* Responsive */
@@ -628,6 +642,7 @@
     .stack-question{ font-size:4rem; }
     .card-page-left{ padding:18px 18px 8px; }
     .card-page-right{ padding:16px 18px 22px; }
+    .card-image-wrap{ border-radius:14px; }
     .card-body h3{ font-size:1.2rem; }
     .difficulty-tag{ font-size:0.72rem; padding:6px 11px; }
     .card-body .description{ font-size:1rem; }
