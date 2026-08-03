@@ -236,6 +236,8 @@
   /* Card section */
   .card-section{
     display:flex;
+    flex-direction:column;
+    align-items:center;
     justify-content:center;
     margin-bottom:10px;
     min-height:120px;
