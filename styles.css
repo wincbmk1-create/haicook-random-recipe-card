@@ -622,8 +622,8 @@
   .reddit-share{ color:#FF4500; }
   .messenger-share{ color:#0084FF; }
   .snapchat-share{
-    background:#FFFC00;
-    border-color:#E5DC32;
+    background:#fff;
+    border-color:var(--border);
     color:#111;
   }
   .threads-share{ color:#111; }
