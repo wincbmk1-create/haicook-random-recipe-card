@@ -25,6 +25,11 @@ const facebookShareLink = document.getElementById('facebookShareLink');
 const xShareLink = document.getElementById('xShareLink');
 const lineShareLink = document.getElementById('lineShareLink');
 const whatsappShareLink = document.getElementById('whatsappShareLink');
+const redditShareLink = document.getElementById('redditShareLink');
+const messengerShareLink = document.getElementById('messengerShareLink');
+const snapchatShareLink = document.getElementById('snapchatShareLink');
+const threadsShareLink = document.getElementById('threadsShareLink');
+const telegramShareLink = document.getElementById('telegramShareLink');
 
 // ---------- Step 1: Base selection ----------
 baseOptions.addEventListener('click', (e) => {
@@ -149,13 +154,26 @@ function buildTrackedShareUrl(dish, medium) {
 function updateShareLinks(dish) {
   const shareText = `I found ${dish.name} on HAiCook Recipe Spinner.`;
   const copyUrl = buildTrackedShareUrl(dish, 'copy_link');
-  const socialUrl = buildTrackedShareUrl(dish, 'social');
+  const facebookUrl = buildTrackedShareUrl(dish, 'facebook');
+  const xUrl = buildTrackedShareUrl(dish, 'x');
+  const lineUrl = buildTrackedShareUrl(dish, 'line');
+  const whatsappUrl = buildTrackedShareUrl(dish, 'whatsapp');
+  const redditUrl = buildTrackedShareUrl(dish, 'reddit');
+  const messengerUrl = buildTrackedShareUrl(dish, 'messenger');
+  const snapchatUrl = buildTrackedShareUrl(dish, 'snapchat');
+  const threadsUrl = buildTrackedShareUrl(dish, 'threads');
+  const telegramUrl = buildTrackedShareUrl(dish, 'telegram');
 
   if (copyShareLink) copyShareLink.dataset.shareUrl = copyUrl;
-  if (facebookShareLink) facebookShareLink.href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(socialUrl)}`;
-  if (xShareLink) xShareLink.href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(socialUrl)}`;
-  if (lineShareLink) lineShareLink.href = `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(socialUrl)}`;
-  if (whatsappShareLink) whatsappShareLink.href = `https://wa.me/?text=${encodeURIComponent(`${shareText} ${socialUrl}`)}`;
+  if (facebookShareLink) facebookShareLink.href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(facebookUrl)}`;
+  if (xShareLink) xShareLink.href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(xUrl)}`;
+  if (lineShareLink) lineShareLink.href = `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(lineUrl)}`;
+  if (whatsappShareLink) whatsappShareLink.href = `https://wa.me/?text=${encodeURIComponent(`${shareText} ${whatsappUrl}`)}`;
+  if (redditShareLink) redditShareLink.href = `https://www.reddit.com/submit?url=${encodeURIComponent(redditUrl)}&title=${encodeURIComponent(shareText)}`;
+  if (messengerShareLink) messengerShareLink.href = `fb-messenger://share/?link=${encodeURIComponent(messengerUrl)}`;
+  if (snapchatShareLink) snapchatShareLink.href = `https://www.snapchat.com/share?link=${encodeURIComponent(snapchatUrl)}`;
+  if (threadsShareLink) threadsShareLink.href = `https://www.threads.net/intent/post?text=${encodeURIComponent(`${shareText} ${threadsUrl}`)}`;
+  if (telegramShareLink) telegramShareLink.href = `https://t.me/share/url?url=${encodeURIComponent(telegramUrl)}&text=${encodeURIComponent(shareText)}`;
 }
 
 function trackShare(method) {
@@ -198,3 +216,8 @@ facebookShareLink?.addEventListener('click', () => trackShare('facebook'));
 xShareLink?.addEventListener('click', () => trackShare('x'));
 lineShareLink?.addEventListener('click', () => trackShare('line'));
 whatsappShareLink?.addEventListener('click', () => trackShare('whatsapp'));
+redditShareLink?.addEventListener('click', () => trackShare('reddit'));
+messengerShareLink?.addEventListener('click', () => trackShare('messenger'));
+snapchatShareLink?.addEventListener('click', () => trackShare('snapchat'));
+threadsShareLink?.addEventListener('click', () => trackShare('threads'));
+telegramShareLink?.addEventListener('click', () => trackShare('telegram'));

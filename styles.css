@@ -606,11 +606,28 @@
     box-shadow:0 8px 18px rgba(63,45,34,0.16);
   }
   .share-btn:active{ transform:scale(0.97); }
+  .share-btn.social-share{
+    width:42px;
+    min-width:42px;
+    padding:0;
+    border-radius:50%;
+    font-size:1.08rem;
+  }
+  .share-btn.social-share i{ line-height:1; }
   .copy-share{ color:#6B4A35; }
   .facebook-share{ color:#1877F2; }
   .x-share{ color:#111; }
   .line-share{ color:#06C755; }
   .whatsapp-share{ color:#25D366; }
+  .reddit-share{ color:#FF4500; }
+  .messenger-share{ color:#0084FF; }
+  .snapchat-share{
+    background:#FFFC00;
+    border-color:#E5DC32;
+    color:#111;
+  }
+  .threads-share{ color:#111; }
+  .telegram-share{ color:#229ED9; }
   .copy-share.copied{
     background:#E6EBD8;
     color:#4E6542;
@@ -717,7 +734,8 @@
     .steps-list li::before{ width:22px; height:22px; font-size:0.75rem; }
     .share-section{ padding:16px 14px; border-radius:18px; }
     .share-actions{ gap:8px; }
-    .share-btn{ min-width:136px; height:40px; font-size:0.82rem; }
+    .copy-share{ min-width:136px; height:40px; font-size:0.82rem; }
+    .share-btn.social-share{ width:40px; min-width:40px; height:40px; }
     .store-buttons{ flex-direction:column; align-items:center; }
     .store-btn{ width:160px; height:50px; }
     body{ background-size:320px 320px, cover; }
