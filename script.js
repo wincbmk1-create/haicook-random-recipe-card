@@ -138,16 +138,24 @@ function fillCard(dish) {
 
 // ---------- Share actions ----------
 function getBaseShareUrl() {
-  const canonical = document.querySelector('link[rel="canonical"]');
-  return canonical ? canonical.href : window.location.href.split('#')[0];
+  const url = new URL(window.location.href);
+  url.search = '';
+  url.hash = '';
+  return url.toString();
+}
+
+function getRecipeSlug(dish) {
+  return (dish.name || 'recipe').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 }
 
 function buildTrackedShareUrl(dish, medium) {
+  const slug = getRecipeSlug(dish);
   const url = new URL(getBaseShareUrl());
+  url.searchParams.set('recipe', slug);
   url.searchParams.set('utm_source', 'recipe_spinner');
   url.searchParams.set('utm_medium', medium);
   url.searchParams.set('utm_campaign', 'recipe_share');
-  url.searchParams.set('utm_content', (dish.name || 'recipe').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''));
+  url.searchParams.set('utm_content', slug);
   return url.toString();
 }
 
@@ -247,3 +255,29 @@ messengerShareLink?.addEventListener('click', () => trackShare('messenger'));
 snapchatShareLink?.addEventListener('click', () => trackShare('snapchat'));
 threadsShareLink?.addEventListener('click', () => trackShare('threads'));
 telegramShareLink?.addEventListener('click', () => trackShare('telegram'));
+// ---------- Shared recipe entry ----------
+function getRecipeFromUrl() {
+  const params = new URLSearchParams(window.location.search);
+  const slug = params.get('recipe');
+  if (!slug) return null;
+
+  return RECIPES.find(dish => getRecipeSlug(dish) === slug) || null;
+}
+
+function revealSharedRecipe() {
+  const sharedRecipe = getRecipeFromUrl();
+  if (!sharedRecipe) return;
+
+  selectedBase = sharedRecipe.mainBase;
+  lastShownName = sharedRecipe.name;
+  document.querySelectorAll('.base-chip').forEach(chip => {
+    chip.classList.toggle('active', chip.dataset.base === sharedRecipe.mainBase);
+  });
+  spinBtn.disabled = false;
+  cardStack.hidden = true;
+  fillCard(sharedRecipe);
+  recipeCard.hidden = false;
+  if (shareSection) shareSection.hidden = false;
+}
+
+revealSharedRecipe();
