@@ -633,6 +633,61 @@
     color:#4E6542;
     border-color:#7F946B;
   }
+  /* Static recipe detail pages */
+  .recipe-detail-page header{
+    margin-bottom:22px;
+  }
+  .recipe-detail-shell{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:18px;
+  }
+  .recipe-detail-card{
+    margin:0 auto;
+  }
+  .recipe-detail-card .card-title-row h1{
+    font-family:'Poppins', sans-serif;
+    font-size:1.45rem;
+    font-weight:800;
+    color:var(--coffee-dark);
+    line-height:1.25;
+  }
+  .recipe-detail-actions{
+    width:100%;
+    max-width:860px;
+    display:flex;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:12px;
+  }
+  .detail-action{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    min-height:44px;
+    padding:0 18px;
+    border-radius:999px;
+    border:1px solid var(--border);
+    background:var(--white);
+    color:var(--coffee-dark);
+    font-family:'Poppins', sans-serif;
+    font-size:0.9rem;
+    font-weight:800;
+    text-decoration:none;
+    box-shadow:0 8px 18px rgba(63,45,34,0.14);
+    transition:transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .detail-action.primary{
+    background:var(--coffee);
+    color:#fff;
+    border-color:var(--coffee);
+  }
+  .detail-action:hover{
+    transform:translateY(-2px);
+    box-shadow:0 12px 22px rgba(63,45,34,0.18);
+  }
   /* CTA */
   .cta-section{
     text-align:center;
@@ -736,6 +791,9 @@
     .share-actions{ gap:8px; }
     .copy-share{ min-width:136px; height:40px; font-size:0.82rem; }
     .share-btn.social-share{ width:40px; min-width:40px; height:40px; }
+    .recipe-detail-card .card-title-row h1{ font-size:1.2rem; }
+    .recipe-detail-actions{ gap:10px; }
+    .detail-action{ width:100%; max-width:260px; }
     .store-buttons{ flex-direction:column; align-items:center; }
     .store-btn{ width:160px; height:50px; }
     body{ background-size:320px 320px, cover; }

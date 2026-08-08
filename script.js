@@ -150,13 +150,14 @@ function getRecipeSlug(dish) {
 
 function buildTrackedShareUrl(dish, medium) {
   const slug = getRecipeSlug(dish);
-  const url = new URL(getBaseShareUrl());
-  url.searchParams.set('recipe', slug);
-  url.searchParams.set('utm_source', 'recipe_spinner');
-  url.searchParams.set('utm_medium', medium);
-  url.searchParams.set('utm_campaign', 'recipe_share');
-  url.searchParams.set('utm_content', slug);
-  return url.toString();
+  const baseUrl = window.location.protocol.startsWith('http')
+    ? new URL(`/recipes/${slug}/`, window.location.origin)
+    : new URL(`/recipes/${slug}/`, 'https://spin.haicook.ai');
+  baseUrl.searchParams.set('utm_source', 'recipe_spinner');
+  baseUrl.searchParams.set('utm_medium', medium);
+  baseUrl.searchParams.set('utm_campaign', 'recipe_share');
+  baseUrl.searchParams.set('utm_content', slug);
+  return baseUrl.toString();
 }
 
 function formatRecipeShareText(dish) {
@@ -197,7 +198,7 @@ function updateShareLinks(dish) {
 
   if (copyShareLink) {
     copyShareLink.dataset.shareUrl = copyUrl;
-    copyShareLink.dataset.shareText = `${recipeText}\n\nOpen Recipe Spinner: ${copyUrl}`;
+    copyShareLink.dataset.shareText = `${recipeText}\n\nView this recipe: ${copyUrl}`;
   }
   if (facebookShareLink) facebookShareLink.href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(facebookUrl)}&quote=${encodeURIComponent(recipeText)}`;
   if (xShareLink) xShareLink.href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(`${recipeText}\n\n${xUrl}`)}`;
