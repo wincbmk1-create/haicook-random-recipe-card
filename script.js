@@ -151,8 +151,31 @@ function buildTrackedShareUrl(dish, medium) {
   return url.toString();
 }
 
+function formatRecipeShareText(dish) {
+  const ingredients = (dish.ingredientsList || []).map(item => `- ${item}`).join('\n');
+  const steps = (dish.steps || []).map((step, index) => `${index + 1}. ${step}`).join('\n');
+
+  return [
+    `${dish.name} | HAiCook Recipe Spinner`,
+    '',
+    `Main base: ${dish.mainBase}`,
+    `Difficulty: ${dish.difficulty}`,
+    '',
+    dish.description,
+    '',
+    'Ingredients:',
+    ingredients,
+    '',
+    'Cooking Steps:',
+    steps,
+    '',
+    `Why You'll Love It: ${dish.why || ''}`
+  ].filter(Boolean).join('\n');
+}
+
 function updateShareLinks(dish) {
-  const shareText = `I found ${dish.name} on HAiCook Recipe Spinner.`;
+  const recipeText = formatRecipeShareText(dish);
+  const recipeTitle = `${dish.name} | HAiCook Recipe Spinner`;
   const copyUrl = buildTrackedShareUrl(dish, 'copy_link');
   const facebookUrl = buildTrackedShareUrl(dish, 'facebook');
   const xUrl = buildTrackedShareUrl(dish, 'x');
@@ -164,16 +187,19 @@ function updateShareLinks(dish) {
   const threadsUrl = buildTrackedShareUrl(dish, 'threads');
   const telegramUrl = buildTrackedShareUrl(dish, 'telegram');
 
-  if (copyShareLink) copyShareLink.dataset.shareUrl = copyUrl;
-  if (facebookShareLink) facebookShareLink.href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(facebookUrl)}`;
-  if (xShareLink) xShareLink.href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(xUrl)}`;
-  if (lineShareLink) lineShareLink.href = `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(lineUrl)}`;
-  if (whatsappShareLink) whatsappShareLink.href = `https://wa.me/?text=${encodeURIComponent(`${shareText} ${whatsappUrl}`)}`;
-  if (redditShareLink) redditShareLink.href = `https://www.reddit.com/submit?url=${encodeURIComponent(redditUrl)}&title=${encodeURIComponent(shareText)}`;
+  if (copyShareLink) {
+    copyShareLink.dataset.shareUrl = copyUrl;
+    copyShareLink.dataset.shareText = `${recipeText}\n\nOpen Recipe Spinner: ${copyUrl}`;
+  }
+  if (facebookShareLink) facebookShareLink.href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(facebookUrl)}&quote=${encodeURIComponent(recipeText)}`;
+  if (xShareLink) xShareLink.href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(`${recipeText}\n\n${xUrl}`)}`;
+  if (lineShareLink) lineShareLink.href = `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(lineUrl)}&text=${encodeURIComponent(recipeText)}`;
+  if (whatsappShareLink) whatsappShareLink.href = `https://wa.me/?text=${encodeURIComponent(`${recipeText}\n\n${whatsappUrl}`)}`;
+  if (redditShareLink) redditShareLink.href = `https://www.reddit.com/submit?url=${encodeURIComponent(redditUrl)}&title=${encodeURIComponent(recipeTitle)}&text=${encodeURIComponent(recipeText)}`;
   if (messengerShareLink) messengerShareLink.href = `fb-messenger://share/?link=${encodeURIComponent(messengerUrl)}`;
   if (snapchatShareLink) snapchatShareLink.href = `https://www.snapchat.com/share?link=${encodeURIComponent(snapchatUrl)}`;
-  if (threadsShareLink) threadsShareLink.href = `https://www.threads.net/intent/post?text=${encodeURIComponent(`${shareText} ${threadsUrl}`)}`;
-  if (telegramShareLink) telegramShareLink.href = `https://t.me/share/url?url=${encodeURIComponent(telegramUrl)}&text=${encodeURIComponent(shareText)}`;
+  if (threadsShareLink) threadsShareLink.href = `https://www.threads.net/intent/post?text=${encodeURIComponent(`${recipeText}\n\n${threadsUrl}`)}`;
+  if (telegramShareLink) telegramShareLink.href = `https://t.me/share/url?url=${encodeURIComponent(telegramUrl)}&text=${encodeURIComponent(recipeText)}`;
 }
 
 function trackShare(method) {
@@ -183,13 +209,13 @@ function trackShare(method) {
 }
 
 async function copyRecipeLink() {
-  const url = copyShareLink?.dataset.shareUrl || getBaseShareUrl();
+  const text = copyShareLink?.dataset.shareText || copyShareLink?.dataset.shareUrl || getBaseShareUrl();
 
   try {
-    await navigator.clipboard.writeText(url);
+    await navigator.clipboard.writeText(text);
   } catch (error) {
     const textarea = document.createElement('textarea');
-    textarea.value = url;
+    textarea.value = text;
     textarea.setAttribute('readonly', '');
     textarea.style.position = 'fixed';
     textarea.style.left = '-9999px';
