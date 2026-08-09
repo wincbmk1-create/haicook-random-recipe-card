@@ -1,6 +1,8 @@
 // ---------- State ----------
 let selectedBase = null;
 let lastShownName = null;
+let recentShownNames = [];
+let isSpinning = false;
 
 // ---------- DOM References ----------
 const baseOptions = document.getElementById('baseOptions');
@@ -31,6 +33,9 @@ const snapchatShareLink = document.getElementById('snapchatShareLink');
 const threadsShareLink = document.getElementById('threadsShareLink');
 const telegramShareLink = document.getElementById('telegramShareLink');
 
+const DEFAULT_SPIN_BUTTON_HTML = '<i class="fa-solid fa-dice"></i><span class="spin-btn-text">Spin for a Recipe Idea</span>';
+const SPIN_LOADING_ICONS = ['?Ž²', '??', '??', '??', '?³', '??'];
+
 // ---------- Step 1: Base selection ----------
 baseOptions.addEventListener('click', (e) => {
   const chip = e.target.closest('.base-chip');
@@ -41,73 +46,148 @@ baseOptions.addEventListener('click', (e) => {
   chip.classList.add('active');
 
   selectedBase = chip.dataset.base;
-  spinBtn.disabled = false;
+  if (!isSpinning) spinBtn.disabled = false;
 });
 
 // ---------- Step 2: Spin logic ----------
-function spinFromBase(base) {
+function wait(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+function getRecipePool(base) {
   let pool = (!base || base === 'Any')
     ? RECIPES
     : RECIPES.filter(r => r.mainBase === base);
 
-  // fallback safety net (should not trigger given full dataset)
-  if (pool.length === 0) pool = RECIPES;
+  return pool.length ? pool : RECIPES;
+}
 
-  // avoid repeating the same dish twice in a row when possible
-  let candidates = pool.filter(r => r.name !== lastShownName);
+function rememberShownRecipe(name) {
+  lastShownName = name;
+  recentShownNames = [name, ...recentShownNames.filter(item => item !== name)].slice(0, 3);
+}
+
+function pickRecipeFromPool(pool) {
+  let candidates = pool.filter(r => !recentShownNames.includes(r.name));
+  if (candidates.length === 0) candidates = pool.filter(r => r.name !== lastShownName);
   if (candidates.length === 0) candidates = pool;
 
-  const pick = candidates[Math.floor(Math.random() * candidates.length)];
-  lastShownName = pick.name;
+  return candidates[Math.floor(Math.random() * candidates.length)];
+}
 
-  renderCard(pick);
+function setSpinLoading(isLoading) {
+  if (isLoading) {
+    const icons = SPIN_LOADING_ICONS
+      .map((icon, index) => `<span class="spin-loading-icon" style="--i:${index}">${icon}</span>`)
+      .join('');
+
+    spinBtn.classList.add('is-spinning');
+    spinBtn.disabled = true;
+    surpriseBtn.disabled = true;
+    spinBtn.innerHTML = `<span class="spin-loading-icons" aria-hidden="true">${icons}</span><span class="spin-btn-text">Spinning...</span>`;
+    return;
+  }
+
+  spinBtn.classList.remove('is-spinning');
+  spinBtn.innerHTML = DEFAULT_SPIN_BUTTON_HTML;
+  spinBtn.disabled = !selectedBase;
+  surpriseBtn.disabled = false;
+}
+
+function prepareCardForSpin(isFirstReveal) {
+  if (!isFirstReveal) return Promise.resolve();
+
+  cardStack.classList.add('stack-fade-out');
+  return wait(420).then(() => {
+    cardStack.hidden = true;
+    recipeCard.hidden = false;
+    if (shareSection) shareSection.hidden = true;
+  });
+}
+
+function runNameRoulette(pool, finalDish) {
+  const names = pool
+    .filter(dish => dish.name !== finalDish.name)
+    .map(dish => dish.name);
+  const rouletteNames = names.length ? names : [finalDish.name];
+  const duration = 900;
+  const intervalMs = 82;
+  let tick = 0;
+
+  cardName.classList.add('name-roulette');
+  cardName.textContent = rouletteNames[Math.floor(Math.random() * rouletteNames.length)];
+
+  return new Promise(resolve => {
+    const interval = setInterval(() => {
+      cardName.textContent = rouletteNames[tick % rouletteNames.length];
+      tick += 1;
+    }, intervalMs);
+
+    setTimeout(() => {
+      clearInterval(interval);
+      cardName.textContent = finalDish.name;
+      cardName.classList.remove('name-roulette');
+      resolve();
+    }, duration);
+  });
+}
+
+function animateFinalCard() {
+  recipeCard.classList.remove('card-appear', 'card-flip-in', 'result-settle');
+  void recipeCard.offsetWidth;
+  recipeCard.classList.add('result-settle');
+  setTimeout(() => recipeCard.classList.remove('result-settle'), 620);
+}
+
+function scrollToResultCard() {
+  const rect = recipeCard.getBoundingClientRect();
+  const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+  const isComfortablyVisible = rect.top >= 80 && rect.bottom <= viewportHeight - 40;
+
+  if (!isComfortablyVisible) {
+    recipeCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+}
+
+async function spinFromBase(base) {
+  if (isSpinning) return;
+
+  isSpinning = true;
+  setSpinLoading(true);
+
+  const pool = getRecipePool(base);
+  const pick = pickRecipeFromPool(pool);
+  const isFirstReveal = recipeCard.hasAttribute('hidden');
+
+  await prepareCardForSpin(isFirstReveal);
+  await runNameRoulette(pool, pick);
+  fillCard(pick);
+  rememberShownRecipe(pick.name);
+  if (shareSection) shareSection.hidden = false;
+  animateFinalCard();
+  scrollToResultCard();
+
+  isSpinning = false;
+  setSpinLoading(false);
 }
 
 spinBtn.addEventListener('click', () => {
-  if (!selectedBase) return;
+  if (!selectedBase || isSpinning) return;
   spinFromBase(selectedBase);
 });
 
 // "Surprise Me" button spins immediately from the full recipe pool,
 // without requiring a main-base selection first.
 surpriseBtn.addEventListener('click', () => {
+  if (isSpinning) return;
+
   // clear any active base chip selection to avoid confusing UI state
   document.querySelectorAll('.base-chip').forEach(c => c.classList.remove('active'));
+  selectedBase = null;
   spinFromBase('Any');
 });
 
 // ---------- Render / animate card ----------
-function renderCard(dish) {
-  const isFirstReveal = recipeCard.hasAttribute('hidden');
-
-  if (isFirstReveal) {
-    // Step 1: shrink + fade out the placeholder stack completely first,
-    // so it fully disappears before the recipe card enters â€” avoids the
-    // brief side-by-side "jump" that happens when both elements share
-    // the flex row at the same time.
-    cardStack.classList.add('stack-fade-out');
-    setTimeout(() => {
-      cardStack.hidden = true;
-      // Step 2: only now bring the real recipe card into the flow and
-      // play its entrance animation, so the transition reads as one
-      // smooth continuous motion rather than two overlapping ones.
-      fillCard(dish);
-      recipeCard.hidden = false;
-      if (shareSection) shareSection.hidden = false;
-      recipeCard.classList.add('card-appear');
-      setTimeout(() => recipeCard.classList.remove('card-appear'), 650);
-    }, 420);
-  } else {
-    // flip-out, then flip-in with new content
-    recipeCard.classList.add('card-flip-out');
-    setTimeout(() => {
-      fillCard(dish);
-      recipeCard.classList.remove('card-flip-out');
-      recipeCard.classList.add('card-flip-in');
-      setTimeout(() => recipeCard.classList.remove('card-flip-in'), 600);
-    }, 280);
-  }
-}
 
 function fillCard(dish) {
   cardImage.src = dish.image;
@@ -270,11 +350,11 @@ function revealSharedRecipe() {
   if (!sharedRecipe) return;
 
   selectedBase = sharedRecipe.mainBase;
-  lastShownName = sharedRecipe.name;
+  rememberShownRecipe(sharedRecipe.name);
   document.querySelectorAll('.base-chip').forEach(chip => {
     chip.classList.toggle('active', chip.dataset.base === sharedRecipe.mainBase);
   });
-  spinBtn.disabled = false;
+  if (!isSpinning) spinBtn.disabled = false;
   cardStack.hidden = true;
   fillCard(sharedRecipe);
   recipeCard.hidden = false;
