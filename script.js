@@ -147,6 +147,19 @@ function animateFinalCard() {
 function scrollToResultCard() {
   const rect = recipeCard.getBoundingClientRect();
   const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+  const isMobileViewport = window.matchMedia('(max-width: 640px)').matches;
+
+  if (isMobileViewport) {
+    const topOffset = 16;
+    const isCardStartVisible = rect.top >= 8 && rect.top <= 72;
+
+    if (!isCardStartVisible) {
+      const targetTop = window.pageYOffset + rect.top - topOffset;
+      window.scrollTo({ top: Math.max(targetTop, 0), behavior: 'smooth' });
+    }
+    return;
+  }
+
   const isComfortablyVisible = rect.top >= 80 && rect.bottom <= viewportHeight - 40;
 
   if (!isComfortablyVisible) {
