@@ -191,7 +191,8 @@
   }
   .spin-btn i{ margin-right:8px; }
   .spin-btn .spin-btn-text{ white-space:nowrap; }
-  .spin-btn.is-spinning:disabled{
+  .spin-btn.is-spinning:disabled,
+  .surprise-btn.is-spinning:disabled{
     background:#6B4A35;
     color:#fff;
     box-shadow:0 10px 20px rgba(107,74,53,0.28);
@@ -237,7 +238,10 @@
   .or-divider span{ padding:0 12px; }
 
   .surprise-btn{
-    display:block;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
     width:100%;
     padding:15px 20px;
     border:2px solid var(--accent);
@@ -265,6 +269,13 @@
     cursor:not-allowed;
     transform:none;
     box-shadow:none;
+  }
+  .surprise-btn.is-spinning:disabled{
+    background:#6B4A35;
+    color:#fff;
+    box-shadow:0 10px 20px rgba(107,74,53,0.28);
+    cursor:wait;
+    opacity:1;
   }
 
   /* Card section */

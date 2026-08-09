@@ -3,6 +3,7 @@ let selectedBase = null;
 let lastShownName = null;
 let recentShownNames = [];
 let isSpinning = false;
+let activeSpinButton = null;
 
 // ---------- DOM References ----------
 const baseOptions = document.getElementById('baseOptions');
@@ -33,7 +34,8 @@ const snapchatShareLink = document.getElementById('snapchatShareLink');
 const threadsShareLink = document.getElementById('threadsShareLink');
 const telegramShareLink = document.getElementById('telegramShareLink');
 
-const DEFAULT_SPIN_BUTTON_HTML = '<i class="fa-solid fa-dice"></i><span class="spin-btn-text">Spin for a Recipe Idea</span>';
+const DEFAULT_SPIN_BUTTON_HTML = spinBtn.innerHTML;
+const DEFAULT_SURPRISE_BUTTON_HTML = surpriseBtn.innerHTML;
 const SPIN_LOADING_ICONS = ['\u{1F3B2}', '\u{1F345}', '\u{1F955}', '\u{1F35D}', '\u{1F373}', '\u{1F957}'];
 
 // ---------- Step 1: Base selection ----------
@@ -75,23 +77,26 @@ function pickRecipeFromPool(pool) {
   return candidates[Math.floor(Math.random() * candidates.length)];
 }
 
-function setSpinLoading(isLoading) {
+function setSpinLoading(isLoading, triggerButton = spinBtn) {
   if (isLoading) {
     const icons = SPIN_LOADING_ICONS
       .map((icon, index) => `<span class="spin-loading-icon" style="--i:${index}">${icon}</span>`)
       .join('');
 
-    spinBtn.classList.add('is-spinning');
+    activeSpinButton = triggerButton;
+    activeSpinButton.classList.add('is-spinning');
     spinBtn.disabled = true;
     surpriseBtn.disabled = true;
-    spinBtn.innerHTML = `<span class="spin-loading-icons" aria-hidden="true">${icons}</span><span class="spin-btn-text">Spinning...</span>`;
+    activeSpinButton.innerHTML = `<span class="spin-loading-icons" aria-hidden="true">${icons}</span><span class="spin-btn-text">Spinning...</span>`;
     return;
   }
 
-  spinBtn.classList.remove('is-spinning');
+  if (activeSpinButton) activeSpinButton.classList.remove('is-spinning');
   spinBtn.innerHTML = DEFAULT_SPIN_BUTTON_HTML;
+  surpriseBtn.innerHTML = DEFAULT_SURPRISE_BUTTON_HTML;
   spinBtn.disabled = !selectedBase;
   surpriseBtn.disabled = false;
+  activeSpinButton = null;
 }
 
 function prepareCardForSpin(isFirstReveal) {
@@ -149,11 +154,11 @@ function scrollToResultCard() {
   }
 }
 
-async function spinFromBase(base) {
+async function spinFromBase(base, triggerButton = spinBtn) {
   if (isSpinning) return;
 
   isSpinning = true;
-  setSpinLoading(true);
+  setSpinLoading(true, triggerButton);
 
   const pool = getRecipePool(base);
   const pick = pickRecipeFromPool(pool);
@@ -173,7 +178,7 @@ async function spinFromBase(base) {
 
 spinBtn.addEventListener('click', () => {
   if (!selectedBase || isSpinning) return;
-  spinFromBase(selectedBase);
+  spinFromBase(selectedBase, spinBtn);
 });
 
 // "Surprise Me" button spins immediately from the full recipe pool,
@@ -184,7 +189,7 @@ surpriseBtn.addEventListener('click', () => {
   // clear any active base chip selection to avoid confusing UI state
   document.querySelectorAll('.base-chip').forEach(c => c.classList.remove('active'));
   selectedBase = null;
-  spinFromBase('Any');
+  spinFromBase('Any', surpriseBtn);
 });
 
 // ---------- Render / animate card ----------
