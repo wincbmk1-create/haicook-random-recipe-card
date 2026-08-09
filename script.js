@@ -34,7 +34,7 @@ const threadsShareLink = document.getElementById('threadsShareLink');
 const telegramShareLink = document.getElementById('telegramShareLink');
 
 const DEFAULT_SPIN_BUTTON_HTML = '<i class="fa-solid fa-dice"></i><span class="spin-btn-text">Spin for a Recipe Idea</span>';
-const SPIN_LOADING_ICONS = ['?Ž²', '??', '??', '??', '?³', '??'];
+const SPIN_LOADING_ICONS = ['\u{1F3B2}', '\u{1F345}', '\u{1F955}', '\u{1F35D}', '\u{1F373}', '\u{1F957}'];
 
 // ---------- Step 1: Base selection ----------
 baseOptions.addEventListener('click', (e) => {
