@@ -99,14 +99,40 @@ function setSpinLoading(isLoading, triggerButton = spinBtn) {
   activeSpinButton = null;
 }
 
-function prepareCardForSpin(isFirstReveal) {
-  if (!isFirstReveal) return Promise.resolve();
+function showSelectingCard(isFirstReveal) {
+  if (shareSection) shareSection.hidden = true;
+  recipeCard.classList.remove('card-appear', 'card-flip-in', 'result-settle');
+  recipeCard.classList.add('is-selecting');
+  cardName.textContent = 'Finding a recipe idea...';
+
+  if (!isFirstReveal) {
+    recipeCard.hidden = false;
+    return Promise.resolve();
+  }
 
   cardStack.classList.add('stack-fade-out');
   return wait(420).then(() => {
     cardStack.hidden = true;
     recipeCard.hidden = false;
-    if (shareSection) shareSection.hidden = true;
+  });
+}
+
+function preloadRecipeImage(src) {
+  if (!src) return Promise.resolve(false);
+
+  return new Promise(resolve => {
+    const img = new Image();
+    const timeout = setTimeout(() => resolve(false), 1200);
+
+    img.onload = () => {
+      clearTimeout(timeout);
+      resolve(true);
+    };
+    img.onerror = () => {
+      clearTimeout(timeout);
+      resolve(false);
+    };
+    img.src = src;
   });
 }
 
@@ -115,7 +141,7 @@ function runNameRoulette(pool, finalDish) {
     .filter(dish => dish.name !== finalDish.name)
     .map(dish => dish.name);
   const rouletteNames = names.length ? names : [finalDish.name];
-  const duration = 900;
+  const duration = 1050;
   const intervalMs = 82;
   let tick = 0;
 
@@ -177,9 +203,12 @@ async function spinFromBase(base, triggerButton = spinBtn) {
   const pick = pickRecipeFromPool(pool);
   const isFirstReveal = recipeCard.hasAttribute('hidden');
 
-  await prepareCardForSpin(isFirstReveal);
+  await showSelectingCard(isFirstReveal);
+  const imageReadyPromise = preloadRecipeImage(pick.image);
   await runNameRoulette(pool, pick);
-  fillCard(pick);
+  const imageReady = await imageReadyPromise;
+  fillCard(pick, { imageReady });
+  recipeCard.classList.remove('is-selecting');
   rememberShownRecipe(pick.name);
   if (shareSection) shareSection.hidden = false;
   animateFinalCard();
@@ -207,9 +236,18 @@ surpriseBtn.addEventListener('click', () => {
 
 // ---------- Render / animate card ----------
 
-function fillCard(dish) {
-  cardImage.src = dish.image;
-  cardImage.alt = dish.name;
+function fillCard(dish, options = {}) {
+  const imageReady = options.imageReady !== false;
+
+  if (imageReady) {
+    cardImage.hidden = false;
+    cardImage.src = dish.image;
+    cardImage.alt = dish.name;
+  } else {
+    cardImage.removeAttribute('src');
+    cardImage.hidden = true;
+    cardImage.alt = dish.name + ' image unavailable';
+  }
   cardBase.textContent = dish.mainBase;
   cardName.textContent = dish.name;
   cardDescription.textContent = dish.description;
