@@ -296,31 +296,7 @@ function buildTrackedShareUrl(dish, medium) {
   return baseUrl.toString();
 }
 
-function formatRecipeShareText(dish) {
-  const ingredients = (dish.ingredientsList || []).map(item => `- ${item}`).join('\n');
-  const steps = (dish.steps || []).map((step, index) => `${index + 1}. ${step}`).join('\n');
-
-  return [
-    `${dish.name} | HAiCook Recipe Spinner`,
-    '',
-    `Main base: ${dish.mainBase}`,
-    `Difficulty: ${dish.difficulty}`,
-    '',
-    dish.description,
-    '',
-    'Ingredients:',
-    ingredients,
-    '',
-    'Cooking Steps:',
-    steps,
-    '',
-    `Why You'll Love It: ${dish.why || ''}`
-  ].filter(Boolean).join('\n');
-}
-
 function updateShareLinks(dish) {
-  const recipeText = formatRecipeShareText(dish);
-  const recipeTitle = `${dish.name} | HAiCook Recipe Spinner`;
   const copyUrl = buildTrackedShareUrl(dish, 'copy_link');
   const facebookUrl = buildTrackedShareUrl(dish, 'facebook');
   const xUrl = buildTrackedShareUrl(dish, 'x');
@@ -334,19 +310,18 @@ function updateShareLinks(dish) {
 
   if (copyShareLink) {
     copyShareLink.dataset.shareUrl = copyUrl;
-    copyShareLink.dataset.shareText = `${recipeText}\n\nView this recipe: ${copyUrl}`;
+    copyShareLink.dataset.shareText = copyUrl;
   }
-  if (facebookShareLink) facebookShareLink.href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(facebookUrl)}&quote=${encodeURIComponent(recipeText)}`;
-  if (xShareLink) xShareLink.href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(`${recipeText}\n\n${xUrl}`)}`;
-  if (lineShareLink) lineShareLink.href = `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(lineUrl)}&text=${encodeURIComponent(recipeText)}`;
-  if (whatsappShareLink) whatsappShareLink.href = `https://wa.me/?text=${encodeURIComponent(`${recipeText}\n\n${whatsappUrl}`)}`;
-  if (redditShareLink) redditShareLink.href = `https://www.reddit.com/submit?url=${encodeURIComponent(redditUrl)}&title=${encodeURIComponent(recipeTitle)}&text=${encodeURIComponent(recipeText)}`;
+  if (facebookShareLink) facebookShareLink.href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(facebookUrl)}`;
+  if (xShareLink) xShareLink.href = `https://twitter.com/intent/tweet?url=${encodeURIComponent(xUrl)}`;
+  if (lineShareLink) lineShareLink.href = `https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(lineUrl)}`;
+  if (whatsappShareLink) whatsappShareLink.href = `https://wa.me/?text=${encodeURIComponent(whatsappUrl)}`;
+  if (redditShareLink) redditShareLink.href = `https://www.reddit.com/submit?url=${encodeURIComponent(redditUrl)}`;
   if (messengerShareLink) messengerShareLink.href = `fb-messenger://share/?link=${encodeURIComponent(messengerUrl)}`;
   if (snapchatShareLink) snapchatShareLink.href = `https://www.snapchat.com/share?link=${encodeURIComponent(snapchatUrl)}`;
-  if (threadsShareLink) threadsShareLink.href = `https://www.threads.net/intent/post?text=${encodeURIComponent(`${recipeText}\n\n${threadsUrl}`)}`;
-  if (telegramShareLink) telegramShareLink.href = `https://t.me/share/url?url=${encodeURIComponent(telegramUrl)}&text=${encodeURIComponent(recipeText)}`;
+  if (threadsShareLink) threadsShareLink.href = `https://www.threads.net/intent/post?text=${encodeURIComponent(threadsUrl)}`;
+  if (telegramShareLink) telegramShareLink.href = `https://t.me/share/url?url=${encodeURIComponent(telegramUrl)}`;
 }
-
 function trackShare(method) {
   if (typeof gtag === 'function') {
     gtag('event', 'share_recipe', { method });
