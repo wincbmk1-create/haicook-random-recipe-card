@@ -32,6 +32,20 @@ function absoluteUrl(value) {
   return new URL(value.replace(/^\//, ''), `${SITE_URL}/`).toString();
 }
 
+const GOOGLE_ADS_TRACKING_SNIPPET = `<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=AW-17905621290"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'AW-17905621290');
+</script>
+
+<!-- Event snippet for Website traffic (1) conversion page -->
+<script>
+  gtag('event', 'conversion', {'send_to': 'AW-17905621290/CXYuCLyg1OQcEKqyiNpC'});
+</script>`;
 function renderList(items = []) {
   return items.map(item => `<li>${escapeHtml(item)}</li>`).join('\n');
 }
@@ -81,6 +95,7 @@ function renderRecipePage(recipe) {
 <meta name="twitter:image" content="${image}">
 <meta name="twitter:image:alt" content="${escapeHtml(recipe.name)} recipe photo">
 <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+${GOOGLE_ADS_TRACKING_SNIPPET}
 <link rel="icon" type="image/png" sizes="48x48" href="/images/favicon/recipe-spinner-48.png?v=20260726">
 <link rel="icon" type="image/png" sizes="96x96" href="/images/favicon/recipe-spinner-96.png?v=20260726">
 <link rel="icon" type="image/png" sizes="192x192" href="/images/favicon/recipe-spinner-192.png?v=20260726">
