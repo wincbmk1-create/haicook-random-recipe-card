@@ -63,22 +63,6 @@
     filter:drop-shadow(0 8px 16px rgba(63,45,34,0.18));
   }
 
-  .brand{
-    display:inline-flex;
-    align-items:center;
-    gap:8px;
-    background:var(--white);
-    padding:6px 16px;
-    border-radius:999px;
-    box-shadow:0 4px 14px var(--shadow);
-    border:1px solid var(--border);
-    font-weight:700;
-    color:var(--sage-dark);
-    font-size:0.85rem;
-    letter-spacing:0.5px;
-    margin-bottom:18px;
-  }
-  .brand i{ color:var(--accent); }
 
   header h1{
     font-size:2rem;
